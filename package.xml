@@ -16,7 +16,7 @@
   <email>slusarz@horde.org</email>
   <active>yes</active>
  </lead>
- <date>2017-03-20</date>
+ <date>2017-10-17</date>
  <version>
   <release>2.5.6</release>
   <api>2.5.0</api>
@@ -31,13 +31,6 @@
  </notes>
  <contents>
   <dir baseinstalldir="/" name="/">
-   <dir name="doc">
-    <dir name="Horde">
-     <dir name="Cache">
-      <file name="COPYING" role="doc" />
-     </dir> <!-- /doc/Horde/Cache -->
-    </dir> <!-- /doc/Horde -->
-   </dir> <!-- /doc -->
    <dir name="lib">
     <dir name="Horde">
      <dir name="Cache">
@@ -70,7 +63,7 @@
       <file name="2_horde_cache_fix_blob_length.php" role="data" />
      </dir> <!-- /migration/Horde/Cache -->
     </dir> <!-- /migration/Horde -->
-    </dir> <!-- /migration -->
+   </dir> <!-- /migration -->
    <dir name="test">
     <dir name="Horde">
      <dir name="Cache">
@@ -105,6 +98,7 @@
      </dir> <!-- /test/Horde/Cache -->
     </dir> <!-- /test/Horde -->
    </dir> <!-- /test -->
+   <file name="LICENSE" role="doc" />
   </dir> <!-- / -->
  </contents>
  <dependencies>
@@ -196,7 +190,6 @@
  </dependencies>
  <phprelease>
   <filelist>
-   <install as="COPYING" name="doc/Horde/Cache/COPYING" />
    <install as="Horde/Cache.php" name="lib/Horde/Cache.php" />
    <install as="Horde/Cache/Exception.php" name="lib/Horde/Cache/Exception.php" />
    <install as="Horde/Cache/Storage/Apc.php" name="lib/Horde/Cache/Storage/Apc.php" />
@@ -214,6 +207,7 @@
    <install as="Horde/Cache/Storage/Sql.php" name="lib/Horde/Cache/Storage/Sql.php" />
    <install as="Horde/Cache/Storage/Stack.php" name="lib/Horde/Cache/Storage/Stack.php" />
    <install as="Horde/Cache/Storage/Xcache.php" name="lib/Horde/Cache/Storage/Xcache.php" />
+   <install as="LICENSE" name="LICENSE" />
    <install as="migration/1_horde_cache_base_tables.php" name="migration/Horde/Cache/1_horde_cache_base_tables.php" />
    <install as="migration/2_horde_cache_fix_blob_length.php" name="migration/Horde/Cache/2_horde_cache_fix_blob_length.php" />
    <install as="Horde/Cache/AllTests.php" name="test/Horde/Cache/AllTests.php" />
@@ -228,8 +222,6 @@
    <install as="Horde/Cache/MongoTest.php" name="test/Horde/Cache/MongoTest.php" />
    <install as="Horde/Cache/phpunit.xml" name="test/Horde/Cache/phpunit.xml" />
    <install as="Horde/Cache/SessionTest.php" name="test/Horde/Cache/SessionTest.php" />
-   <install as="Horde/Cache/TestBase.php" name="test/Horde/Cache/TestBase.php" />
-   <install as="Horde/Cache/XcacheTest.php" name="test/Horde/Cache/XcacheTest.php" />
    <install as="Horde/Cache/Sql/Base.php" name="test/Horde/Cache/Sql/Base.php" />
    <install as="Horde/Cache/Sql/MysqliTest.php" name="test/Horde/Cache/Sql/MysqliTest.php" />
    <install as="Horde/Cache/Sql/MysqlTest.php" name="test/Horde/Cache/Sql/MysqlTest.php" />
@@ -238,7 +230,9 @@
    <install as="Horde/Cache/Sql/Pdo/PgsqlTest.php" name="test/Horde/Cache/Sql/Pdo/PgsqlTest.php" />
    <install as="Horde/Cache/Sql/Pdo/SqliteTest.php" name="test/Horde/Cache/Sql/Pdo/SqliteTest.php" />
    <install as="Horde/Cache/Stub/File.php" name="test/Horde/Cache/Stub/File.php" />
-   </filelist>
+   <install as="Horde/Cache/TestBase.php" name="test/Horde/Cache/TestBase.php" />
+   <install as="Horde/Cache/XcacheTest.php" name="test/Horde/Cache/XcacheTest.php" />
+  </filelist>
  </phprelease>
  <changelog>
   <release>
@@ -711,7 +705,7 @@ Initial packaging.
    <stability>
     <release>stable</release>
     <api>stable</api></stability>
-   <date>2017-03-20</date>
+   <date>2017-10-17</date>
    <license uri="http://www.horde.org/licenses/lgpl21">LGPL-2.1</license>
    <notes>
 * 
