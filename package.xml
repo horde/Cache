@@ -16,7 +16,7 @@
   <email>slusarz@horde.org</email>
   <active>yes</active>
  </lead>
- <date>2017-10-17</date>
+ <date>2017-10-20</date>
  <version>
   <release>2.5.6</release>
   <api>2.5.0</api>
@@ -91,7 +91,6 @@
       <file name="MemcacheTest.php" role="test" />
       <file name="MemoryTest.php" role="test" />
       <file name="MongoTest.php" role="test" />
-      <file name="phpunit.xml" role="test" />
       <file name="SessionTest.php" role="test" />
       <file name="TestBase.php" role="test" />
       <file name="XcacheTest.php" role="test" />
@@ -220,7 +219,6 @@
    <install as="Horde/Cache/MemcacheTest.php" name="test/Horde/Cache/MemcacheTest.php" />
    <install as="Horde/Cache/MemoryTest.php" name="test/Horde/Cache/MemoryTest.php" />
    <install as="Horde/Cache/MongoTest.php" name="test/Horde/Cache/MongoTest.php" />
-   <install as="Horde/Cache/phpunit.xml" name="test/Horde/Cache/phpunit.xml" />
    <install as="Horde/Cache/SessionTest.php" name="test/Horde/Cache/SessionTest.php" />
    <install as="Horde/Cache/Sql/Base.php" name="test/Horde/Cache/Sql/Base.php" />
    <install as="Horde/Cache/Sql/MysqliTest.php" name="test/Horde/Cache/Sql/MysqliTest.php" />
@@ -705,7 +703,7 @@ Initial packaging.
    <stability>
     <release>stable</release>
     <api>stable</api></stability>
-   <date>2017-10-17</date>
+   <date>2017-10-20</date>
    <license uri="http://www.horde.org/licenses/lgpl21">LGPL-2.1</license>
    <notes>
 * 
