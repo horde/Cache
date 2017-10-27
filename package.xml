@@ -253,7 +253,7 @@
    <date>2004-01-01</date>
    <license uri="http://www.horde.org/licenses/lgpl21">LGPL-2.1</license>
    <notes>
-Initial packaging.
+* Initial packaging.
    </notes>
   </release>
   <release>
