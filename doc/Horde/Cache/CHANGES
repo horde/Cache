@@ -1,0 +1,265 @@
+----------
+v2.5.6-git
+----------
+
+
+------
+v2.5.5
+------
+
+[jan] Fix MongoDB backend with mongodb extension.
+
+
+------
+v2.5.4
+------
+
+[jan] Run Memcache and Mongo tests on PHP 7 too.
+
+
+------
+v2.5.3
+------
+
+[jan] Fix incomplete migration from old to new garbage collection in file
+      backend (Bug #14258).
+[jan] Mark PHP 7 as supported.
+
+
+------
+v2.5.2
+------
+
+[jan] Improve performance and memory consumption of garbage collection in File
+      driver.
+[jan] Fix garbage collection in File driver.
+[jan] Fix caching issues within the same request in the Memcache driver.
+[jan] Fix the Mongo driver's expire() if not using a logger.
+[jan] Add unit tests.
+
+
+------
+v2.5.1
+------
+
+[jan] Improve Oracle compatibility.
+
+
+------
+v2.5.0
+------
+
+[mms] Add Memory driver.
+[mms] Deprecate Memoryoverlay and Mock drivers.
+
+
+------
+v2.4.2
+------
+
+[mms] Hashtable driver now respects lifetime parameter in the get() and
+      exists() methods (Bug #13085).
+
+
+------
+v2.4.1
+------
+
+[mms] Cache prefix should be handled by Hashtable driver, not underlying
+      backend object.
+
+
+------
+v2.4.0
+------
+
+[mms] Fix lifetime usage in the file driver.
+[mms] Add 'no_gc' parameter to the Horde_Cache_Storage_File driver.
+
+
+------
+v2.3.0
+------
+
+[mms] Fix key expiration for APC, Eaccelerator, and Xcache (Bug #12735).
+[mms] Add Horde_Cache_Storage_Memoryoverlay driver.
+
+
+------
+v2.2.1
+------
+
+[mms] Fix explicit key expiration (João Machado <geral@jpaulo.eu>).
+
+
+------
+v2.2.0
+------
+
+[mms] Fix return from get() when using the Hashtable driver.
+[mms] Fix hashtable driver name.
+[mms] Horde_Memcache cache driver is now deprecated in favor of the
+      Horde_HashTable driver.
+[mms] Add Horde_HashTable cache driver.
+
+
+------
+v2.1.0
+------
+
+[mms] Add MongoDB cache driver.
+
+
+------
+v2.0.4
+------
+
+[mms] Make Horde_Compress_Fast a required package (Bug #12166).
+[mms] Fix serialization of all storage drivers.
+
+
+------
+v2.0.3
+------
+
+[mms] Fix regression preventing compression of Horde_Cache data (Bug #12088).
+
+
+------
+v2.0.2
+------
+
+[mms] Abstract data compression out into Horde_Compress_Fast package.
+
+
+------
+v2.0.1
+------
+
+[jan] Re-packaged 2.0.0 release.
+
+
+------
+v2.0.0
+------
+
+First stable release for Horde 5.
+
+
+---------
+v2.0.0RC1
+---------
+
+[mms] Correctly invalidate cache when write error occurs while using the stack
+      driver.
+
+
+-----------
+v2.0.0beta1
+-----------
+
+First beta release for Horde 5.
+[mms] Add Horde_Cache#testReadWrite().
+
+
+------------
+v2.0.0alpha1
+------------
+
+First alpha release for Horde 5.
+
+
+------
+v1.0.6
+------
+
+[mms] Correctly invalidate cache when write error occurs while using the stack
+      driver.
+
+
+------
+v1.0.5
+------
+
+[rla] Add license file.
+
+
+------
+v1.0.4
+------
+
+[mms] Fix memcache duplicate keys (Bug #10072;
+      goncalo.queiros@portugalmail.net).
+
+
+------
+v1.0.3
+------
+
+[jan] Fix dependency.
+
+
+------
+v1.0.2
+------
+
+[jan] Fix expiring entries in sub-storages of Stack driver (Bug #9949).
+
+
+------
+v1.0.1
+------
+
+[jan] Relax required lzf extension version.
+
+
+------
+v1.0.0
+------
+
+First stable release for Horde 4.
+
+
+---------
+v1.0.0RC2
+---------
+
+Second release candidate for Horde 4.
+
+
+---------
+v1.0.0RC1
+---------
+
+First release candidate for Horde 4.
+
+
+-----------
+v1.0.0beta1
+-----------
+
+First beta release for Horde 4.
+
+
+------------
+v1.0.0alpha1
+------------
+
+First alpha release for Horde 4.
+Add SQL backend.
+Converted to package.xml 2.0 for pear.horde.org.
+Add APC, eAccelerator, and XCache backends (duck@obala.net).
+Abstracted storage-specific code into 'Storage' drivers.
+Add option to transparently compress cache data using lzf.
+Added Horde_Cache_Session::.
+Horde_Cache::set() no longer returns a boolean result.
+Added Horde_Cache_Exception::.
+Removed dependency on Horde Core.
+Added Horde_Cache#clear()
+
+
+------
+v0.0.1
+------
+
+Initial packaging.

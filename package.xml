@@ -16,7 +16,7 @@
   <email>slusarz@horde.org</email>
   <active>yes</active>
  </lead>
- <date>2017-03-20</date>
+ <date>2017-10-30</date>
  <version>
   <release>2.5.6</release>
   <api>2.5.0</api>
@@ -34,6 +34,7 @@
    <dir name="doc">
     <dir name="Horde">
      <dir name="Cache">
+      <file name="CHANGES" role="doc" />
       <file name="COPYING" role="doc" />
      </dir> <!-- /doc/Horde/Cache -->
     </dir> <!-- /doc/Horde -->
@@ -196,6 +197,7 @@
  </dependencies>
  <phprelease>
   <filelist>
+   <install as="CHANGES" name="doc/Horde/Cache/CHANGES" />
    <install as="COPYING" name="doc/Horde/Cache/COPYING" />
    <install as="Horde/Cache.php" name="lib/Horde/Cache.php" />
    <install as="Horde/Cache/Exception.php" name="lib/Horde/Cache/Exception.php" />
@@ -711,7 +713,7 @@
    <stability>
     <release>stable</release>
     <api>stable</api></stability>
-   <date>2017-03-20</date>
+   <date>2017-10-30</date>
    <license uri="http://www.horde.org/licenses/lgpl21">LGPL-2.1</license>
    <notes>
 * 
