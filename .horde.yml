@@ -48,7 +48,9 @@ dependencies:
       pear.horde.org/Horde_Log: ^2
       pear.horde.org/Horde_Memcache: ^2
       pear.horde.org/Horde_Mongo: ^1
-      pecl.php.net/APC: ^3.1.1
+      pecl.php.net/APC:
+        version: ^3.1.1
+        providesextension: apc
     ext:
-      eaccelerator: ^0.9.5 <=0.9.5
+      eaccelerator: 0.9.5
       xcache: '*'
