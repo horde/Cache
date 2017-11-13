@@ -1,8 +1,8 @@
 {
     "name": "horde/cache",
-    "description": "Horde Caching API",
+    "description": "Caching library",
     "type": "library",
-    "homepage": "https://pear.horde.org",
+    "homepage": "https://www.horde.org/libraries/Horde_Cache",
     "license": "LGPL-2.1",
     "authors": [
         {
@@ -17,7 +17,7 @@
         }
     ],
     "version": "2.5.6",
-    "time": "2017-10-20",
+    "time": "2017-11-11",
     "repositories": [
         {
             "type": "pear",
@@ -38,7 +38,7 @@
         "pear-pear.horde.org/Horde_Memcache": "^2",
         "pear-pear.horde.org/Horde_Mongo": "^1",
         "pear-pecl.php.net/APC": "^3.1.1",
-        "ext-eaccelerator": "^0.9.5 <=0.9.5",
+        "ext-eaccelerator": "0.9.5",
         "ext-xcache": "*"
     },
     "replace": {
