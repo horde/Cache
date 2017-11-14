@@ -2,21 +2,21 @@
 <package packagerversion="1.9.2" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0 http://pear.php.net/dtd/tasks-1.0.xsd http://pear.php.net/dtd/package-2.0 http://pear.php.net/dtd/package-2.0.xsd">
  <name>Horde_Cache</name>
  <channel>pear.horde.org</channel>
- <summary>Horde Caching API</summary>
+ <summary>Caching library</summary>
  <description>A simple, functional caching API, with the option to store the cached data on the filesystem, in one of the PHP opcode cache systems (APC, eAcclerator, XCache), Memcache, MongoDB, Redis, user session, an SQL table, or a combination of these.</description>
  <lead>
   <name>Chuck Hagenbuch</name>
   <user>chuck</user>
   <email>chuck@horde.org</email>
-  <active>yes</active>
+  <active>no</active>
  </lead>
  <lead>
   <name>Michael Slusarz</name>
   <user>slusarz</user>
   <email>slusarz@horde.org</email>
-  <active>yes</active>
+  <active>no</active>
  </lead>
- <date>2017-10-30</date>
+ <date>2017-11-14</date>
  <version>
   <release>2.5.6</release>
   <api>2.5.0</api>
@@ -183,6 +183,8 @@
     <name>APC</name>
     <channel>pecl.php.net</channel>
     <min>3.1.1</min>
+    <max>4.0.0alpha1</max>
+    <exclude>4.0.0alpha1</exclude>
     <providesextension>apc</providesextension>
    </package>
    <extension>
@@ -713,7 +715,7 @@
    <stability>
     <release>stable</release>
     <api>stable</api></stability>
-   <date>2017-10-30</date>
+   <date>2017-11-14</date>
    <license uri="http://www.horde.org/licenses/lgpl21">LGPL-2.1</license>
    <notes>
 * 
