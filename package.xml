@@ -3,27 +3,27 @@
  <name>Horde_Cache</name>
  <channel>pear.horde.org</channel>
  <summary>Caching library</summary>
- <description>A simple, functional caching API, with the option to store the cached data on the filesystem, in one of the PHP opcode cache systems (APC, eAcclerator, XCache), Memcache, MongoDB, Redis, user session, an SQL table, or a combination of these.</description>
+ <description>A simple, functional caching library, with the option to store the cached data on the filesystem, APCu, eAcclerator, XCache, Memcache, MongoDB, Redis, user session, an SQL table, or a combination of these.</description>
  <lead>
   <name>Chuck Hagenbuch</name>
   <user>chuck</user>
   <email>chuck@horde.org</email>
-  <active>yes</active>
+  <active>no</active>
  </lead>
  <lead>
   <name>Michael Slusarz</name>
   <user>slusarz</user>
   <email>slusarz@horde.org</email>
-  <active>yes</active>
+  <active>no</active>
  </lead>
- <date>2017-11-11</date>
+ <date>2021-02-23</date>
  <version>
-  <release>2.5.6</release>
-  <api>2.5.0</api>
+  <release>3.0.0alpha1</release>
+  <api>3.0.0alpha1</api>
  </version>
  <stability>
-  <release>stable</release>
-  <api>stable</api>
+  <release>alpha</release>
+  <api>alpha</api>
  </stability>
  <license uri="http://www.horde.org/licenses/lgpl21">LGPL-2.1</license>
  <notes>
@@ -708,12 +708,12 @@
   </release>
   <release>
    <version>
-    <release>2.5.6</release>
-    <api>2.5.0</api></version>
+    <release>3.0.0alpha1</release>
+    <api>3.0.0alpha1</api></version>
    <stability>
-    <release>stable</release>
-    <api>stable</api></stability>
-   <date>2017-11-11</date>
+    <release>alpha</release>
+    <api>alpha</api></stability>
+   <date>2021-02-23</date>
    <license uri="http://www.horde.org/licenses/lgpl21">LGPL-2.1</license>
    <notes>
 * 
