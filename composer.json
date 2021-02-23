@@ -26,21 +26,21 @@
     ],
     "require": {
         "horde/horde-installer-plugin": "*",
-        "php": "^5.3 || ^7",
-        "horde/compress_fast": "^1",
-        "horde/exception": "^2",
-        "horde/util": "^2",
+        "php": "^7",
+        "horde/compress_fast": "^2",
+        "horde/exception": "^3",
+        "horde/util": "^3",
         "ext-hash": "*"
     },
     "suggest": {
-        "horde/db": "^2.1",
-        "horde/hashtable": "^1",
-        "horde/log": "^2",
-        "horde/memcache": "^2",
-        "horde/mongo": "^1",
-        "ext-APC": "^3.1.1",
+        "horde/db": "^3",
+        "horde/hashtable": "^2",
+        "horde/log": "^3",
+        "horde/,emcache": "^3",
+        "horde/mongo": "^2",
         "ext-eaccelerator": "0.9.5",
-        "ext-xcache": "*"
+        "ext-xcache": "*",
+        "ext-apc": "*"
     },
     "autoload": {
         "psr-0": {
