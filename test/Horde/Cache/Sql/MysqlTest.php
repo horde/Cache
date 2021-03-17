@@ -10,6 +10,8 @@
  * @license  http://www.horde.org/licenses/lgpl21 LGPL 2.1
  * @package  Cache
  */
+namespace Horde\Cache\Sql;
+use Horde_Cache_Sql_Base as Base;
 
 /**
  * This class tests a MySQL backend.
@@ -19,7 +21,7 @@
  * @license  http://www.horde.org/licenses/lgpl21 LGPL 2.1
  * @package  Cache
  */
-class Horde_Cache_Sql_MysqlTest extends Horde_Cache_Sql_Base
+class MysqlTest extends Base
 {
     protected function _getCache($params = array())
     {

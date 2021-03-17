@@ -10,6 +10,8 @@
  * @license  http://www.horde.org/licenses/lgpl21 LGPL 2.1
  * @package  Cache
  */
+namespace Horde\Cache;
+use Horde_Cache_TestBase as TestBase;
 
 /**
  * This class tests the Horde_Hashtable backend.
@@ -19,7 +21,7 @@
  * @license  http://www.horde.org/licenses/lgpl21 LGPL 2.1
  * @package  Cache
  */
-class Horde_Cache_HashtableTest extends Horde_Cache_TestBase
+class HashtableTest extends TestBase
 {
     protected function _getCache($params = array())
     {

@@ -10,6 +10,8 @@
  * @license  http://www.horde.org/licenses/lgpl21 LGPL 2.1
  * @package  Cache
  */
+namespace Horde\Cache;
+use Horde_Cache_TestBase as TestBase;
 
 /**
  * This class tests the XCache backend.
@@ -19,7 +21,7 @@
  * @license  http://www.horde.org/licenses/lgpl21 LGPL 2.1
  * @package  Cache
  */
-class Horde_Cache_XcacheTest extends Horde_Cache_TestBase
+class XcacheTest extends TestBase
 {
     protected function _getCache($params = array())
     {
@@ -39,7 +41,7 @@ class Horde_Cache_XcacheTest extends Horde_Cache_TestBase
         $this->markTestSkipped('Not supported');
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         if ($this->cache) {
             $this->cache->expire('key1');
