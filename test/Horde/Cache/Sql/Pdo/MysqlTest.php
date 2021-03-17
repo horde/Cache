@@ -10,6 +10,9 @@
  * @license  http://www.horde.org/licenses/lgpl21 LGPL 2.1
  * @package  Cache
  */
+namespace Horde\Cache\Sql\Pdo;
+use Horde_Cache_Sql_Base as Base;
+use \PDO;
 
 /**
  * This class test a PDO MySQL backend.
@@ -19,7 +22,7 @@
  * @license  http://www.horde.org/licenses/lgpl21 LGPL 2.1
  * @package  Cache
  */
-class Horde_Cache_Sql_Pdo_MysqlTest extends Horde_Cache_Sql_Base
+class MysqlTest extends Base
 {
     protected function _getCache($params = array())
     {
