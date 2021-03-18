@@ -37,7 +37,12 @@ abstract class Horde_Cache_TestBase extends Horde_Test_Case
 
     public function testReadWrite()
     {
-   		$this->assertTrue($this->cache->testReadWrite());
+   		if (class_exists('Horde_Db_Adapter_Pdo_Sqlite')) {
+            $this->assertTrue($this->cache->testReadWrite());
+        } else {
+            $this->markTestSkipped('DB library not found.');
+        }
+
     }
 
     public function testSet()
