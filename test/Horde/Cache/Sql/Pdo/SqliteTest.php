@@ -10,6 +10,9 @@
  * @license  http://www.horde.org/licenses/lgpl21 LGPL 2.1
  * @package  Cache
  */
+namespace Horde\Cache\Sql\Pdo;
+use Horde_Cache_Sql_Base as Base;
+use \Horde_Test_Factory_Db;
 
 /**
  * This class test a PDO SQLite backend.
@@ -19,13 +22,15 @@
  * @license  http://www.horde.org/licenses/lgpl21 LGPL 2.1
  * @package  Cache
  */
-class Horde_Cache_Sql_Pdo_SqliteTest extends Horde_Cache_Sql_Base
+class SqliteTest extends Base
 {
     protected function _getCache($params = array())
     {
         $factory_db = new Horde_Test_Factory_Db();
         try {
-            $this->db = $factory_db->create();
+            if (class_exists('Horde_Db_Adapter_Pdo_Sqlite')) {
+                $this->db = $factory_db->create();
+            }
         } catch (Horde_Test_Exception $e) {
             $this->reason = 'Sqlite not available';
             return;

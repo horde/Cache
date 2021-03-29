@@ -10,6 +10,8 @@
  * @license  http://www.horde.org/licenses/lgpl21 LGPL 2.1
  * @package  Cache
  */
+namespace Horde\Cache;
+use Horde_Cache_TestBase as TestBase;
 
 /**
  * This class tests the MongoDB backend.
@@ -19,7 +21,7 @@
  * @license  http://www.horde.org/licenses/lgpl21 LGPL 2.1
  * @package  Cache
  */
-class Horde_Cache_MongoTest extends Horde_Cache_TestBase
+class MongoTest extends TestBase
 {
     protected function _getCache($params = array())
     {
@@ -53,7 +55,7 @@ class Horde_Cache_MongoTest extends Horde_Cache_TestBase
         return new Horde_Cache($storage);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         if (!empty($this->mongo)) {

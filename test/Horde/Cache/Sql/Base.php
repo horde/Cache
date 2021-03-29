@@ -33,23 +33,26 @@ class Horde_Cache_Sql_Base extends Horde_Cache_TestBase
                 . '/Horde_Cache/migration';
             error_reporting(E_ALL | E_STRICT);
         }
-        $this->migrator = new Horde_Db_Migration_Migrator(
-            $this->db,
-            null,//$logger,
-            array('migrationsPath' => $dir,
-                  'schemaTableName' => 'horde_cache_schema_info'));
-        $this->migrator->up();
-
-        return new Horde_Cache(
-            new Horde_Cache_Storage_File(array_merge(
-                array('db'   => $this->db),
-                $params
-            ))
-        );
+        
+        if (class_exists('Horde_Db_Migration_Migrator')) {
+            $this->migrator = new Horde_Db_Migration_Migrator(
+                        $this->db,
+                        null,//$logger,
+                        array('migrationsPath' => $dir,
+                            'schemaTableName' => 'horde_cache_schema_info'));
+                    $this->migrator->up();
+       
+            return new Horde_Cache(
+                new Horde_Cache_Storage_File(array_merge(
+                    array('db'   => $this->db),
+                    $params
+                ))
+            );
+        }
     }
 
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         $this->db->delete('DELETE FROM horde_cache');

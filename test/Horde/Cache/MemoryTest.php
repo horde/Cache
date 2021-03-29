@@ -10,6 +10,10 @@
  * @license  http://www.horde.org/licenses/lgpl21 LGPL 2.1
  * @package  Cache
  */
+namespace Horde\Cache;
+use Horde_Cache_TestBase as TestBase;
+use \Horde_Cache;
+use \Horde_Cache_Storage_Memory;
 
 /**
  * This class tests the memory backend.
@@ -19,7 +23,7 @@
  * @license  http://www.horde.org/licenses/lgpl21 LGPL 2.1
  * @package  Cache
  */
-class Horde_Cache_MemoryTest extends Horde_Cache_TestBase
+class MemoryTest extends TestBase
 {
     protected function _getCache($params = array())
     {
