@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016-2017 Horde LLC (http://www.horde.org/)
+ * Copyright 2016-2021 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information (LGPL). If you
  * did not receive this file, see http://www.horde.org/licenses/lgpl21.
@@ -10,8 +10,10 @@
  * @license  http://www.horde.org/licenses/lgpl21 LGPL 2.1
  * @package  Cache
  */
-namespace Horde\Cache;
-use Horde_Cache_TestBase as TestBase;
+namespace Horde\Cache\Test;
+
+use Horde\Cache\ApcuStorage;
+use Horde\Cache\Cache;
 
 /**
  * This class tests the APC backend.
@@ -21,18 +23,18 @@ use Horde_Cache_TestBase as TestBase;
  * @license  http://www.horde.org/licenses/lgpl21 LGPL 2.1
  * @package  Cache
  */
-class ApcTest extends TestBase
+class ApcuTest extends TestBase
 {
-    protected function _getCache($params = array())
+    protected function _getCache($params = [])
     {
-        if (!extension_loaded('apc')) {
-            $this->reason = 'APC extension not loaded';
+        if (!extension_loaded('apcu')) {
+            $this->reason = 'APCu extension not loaded';
             return;
         }
-        return new Horde_Cache(
-            new Horde_Cache_Storage_Apc(array(
+        return new Cache(
+            new ApcuStorage([
                 'prefix' => 'horde_cache_test'
-            ))
+            ])
         );
     }
 }

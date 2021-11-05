@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016-2017 Horde LLC (http://www.horde.org/)
+ * Copyright 2016-2021 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information (LGPL). If you
  * did not receive this file, see http://www.horde.org/licenses/lgpl21.
@@ -10,7 +10,10 @@
  * @license  http://www.horde.org/licenses/lgpl21 LGPL 2.1
  * @package  Cache
  */
-
+namespace Horde\Cache\Test;
+use Horde\Test\TestCase;
+use Horde_Db_Adapter_Pdo_Sqlite;
+use Horde_Compress_Fast;
 /**
  * This is the base test class to run all tests that the backend implementation
  * should support.
@@ -20,12 +23,12 @@
  * @license  http://www.horde.org/licenses/lgpl21 LGPL 2.1
  * @package  Cache
  */
-abstract class Horde_Cache_TestBase extends Horde_Test_Case
+abstract class TestBase extends TestCase
 {
     protected $reason = '';
     protected $cache;
 
-    abstract protected function _getCache($params = array());
+    abstract protected function _getCache($params = []);
 
     public function setUp(): void
     {
@@ -105,7 +108,7 @@ abstract class Horde_Cache_TestBase extends Horde_Test_Case
             $this->markTestSkipped('Horde_Compress_Fast not installed');
         }
         $this->tearDown();
-        $this->cache = $this->_getCache(array('compress' => true));
+        $this->cache = $this->_getCache(['compress' => true]);
         if (!$this->cache) {
             $this->markTestSkipped($this->reason);
         }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016-2017 Horde LLC (http://www.horde.org/)
+ * Copyright 2016-2021 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information (LGPL). If you
  * did not receive this file, see http://www.horde.org/licenses/lgpl21.
@@ -10,34 +10,34 @@
  * @license  http://www.horde.org/licenses/lgpl21 LGPL 2.1
  * @package  Cache
  */
-namespace Horde\Cache\Sql\Pdo;
-use Horde_Cache_Sql_Base as Base;
+namespace Horde\Cache\Test\Sql\Pdo;
+use Horde\Cache\Test\Sql\Base;
 use \PDO;
-
+use Horde_Db_Adapter_Pdo_Mysql;
 /**
- * This class test a PDO PostgreSQL backend.
+ * This class test a PDO MySQL backend.
  *
  * @author   Jan Schneider <jan@horde.org>
  * @category Horde
  * @license  http://www.horde.org/licenses/lgpl21 LGPL 2.1
  * @package  Cache
  */
-class PgsqlTest extends Base
+class MysqlTest extends Base
 {
     protected function _getCache($params = array())
     {
         if (!extension_loaded('pdo') ||
-            !in_array('pgsql', PDO::getAvailableDrivers())) {
-            $this->reason = 'No pdo_pgsql extension';
+            !in_array('mysql', PDO::getAvailableDrivers())) {
+            $this->reason = 'No pdo_mysql extension';
             return;
         }
-        $config = self::getConfig('CACHE_SQL_PDO_PGSQL_TEST_CONFIG',
+        $config = self::getConfig('CACHE_SQL_PDO_MYSQL_TEST_CONFIG',
                                   __DIR__ . '/../..');
-        if ($config && !empty($config['cache']['sql']['pdo_pgsql'])) {
-            $this->db = new Horde_Db_Adapter_Pdo_Pgsql($config['cache']['sql']['pdo_pgsql']);
+        if ($config && !empty($config['cache']['sql']['pdo_mysql'])) {
+            $this->db = new Horde_Db_Adapter_Pdo_Mysql($config['cache']['sql']['pdo_mysql']);
             return parent::_getCache($params);
         } else {
-            $this->reason = 'No pdo_pgsql configuration';
+            $this->reason = 'No pdo_mysql configuration';
         }
     }
 }

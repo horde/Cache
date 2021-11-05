@@ -33,7 +33,7 @@ license:
   uri: http://www.horde.org/licenses/lgpl21
 dependencies:
   required:
-    php: ^7
+    php: ^7.4 || ^8
     composer:
       horde/compress_fast: ^2
       horde/exception: ^3
@@ -45,9 +45,17 @@ dependencies:
       horde/db: ^3
       horde/hashtable: ^2
       horde/log: ^3
-      horde/,emcache: ^3
+      horde/memcache: ^3
       horde/mongo: ^2
     ext:
       eaccelerator: 0.9.5
       xcache: '*'
-      apc: '*'
+      apcu: '*'
+  dev:
+    composer:
+      horde/test: ^3
+      horde/db: ^3
+      horde/hashtable: ^2
+      horde/log: ^3
+      horde/memcache: ^3
+      horde/mongo: ^2

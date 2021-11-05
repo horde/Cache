@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016-2017 Horde LLC (http://www.horde.org/)
+ * Copyright 2016-2021 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information (LGPL). If you
  * did not receive this file, see http://www.horde.org/licenses/lgpl21.
@@ -10,10 +10,9 @@
  * @license  http://www.horde.org/licenses/lgpl21 LGPL 2.1
  * @package  Cache
  */
-namespace Horde\Cache;
-use Horde_Cache_TestBase as TestBase;
-use \Horde_Cache;
-use \Horde_Cache_Storage_Memory;
+namespace Horde\Cache\Test;
+use \Horde\Cache\Cache;
+use \Horde\Cache\MemoryStorage;
 
 /**
  * This class tests the memory backend.
@@ -25,10 +24,10 @@ use \Horde_Cache_Storage_Memory;
  */
 class MemoryTest extends TestBase
 {
-    protected function _getCache($params = array())
+    protected function _getCache($params = [])
     {
-        return new Horde_Cache(
-            new Horde_Cache_Storage_Memory()
+        return new Cache(
+            new MemoryStorage()
         );
     }
 
