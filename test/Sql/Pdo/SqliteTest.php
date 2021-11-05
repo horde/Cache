@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2016-2017 Horde LLC (http://www.horde.org/)
+ * Copyright 2016-2021 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information (LGPL). If you
  * did not receive this file, see http://www.horde.org/licenses/lgpl21.
@@ -11,9 +11,9 @@
  * @package  Cache
  */
 namespace Horde\Cache\Sql\Pdo;
-use Horde_Cache_Sql_Base as Base;
-use \Horde_Test_Factory_Db;
-
+use Horde\Cache\Test\Sql\Base;
+use \Horde\Test\Factory\Db as DbFactory;
+use Horde\Test\Exception;
 /**
  * This class test a PDO SQLite backend.
  *
@@ -26,12 +26,12 @@ class SqliteTest extends Base
 {
     protected function _getCache($params = array())
     {
-        $factory_db = new Horde_Test_Factory_Db();
+        $factory_db = new DbFactory();
         try {
             if (class_exists('Horde_Db_Adapter_Pdo_Sqlite')) {
                 $this->db = $factory_db->create();
             }
-        } catch (Horde_Test_Exception $e) {
+        } catch (TestException $e) {
             $this->reason = 'Sqlite not available';
             return;
         }

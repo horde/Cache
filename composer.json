@@ -1,5 +1,4 @@
 {
-    "minimum-stability": "dev",
     "name": "horde/cache",
     "description": "Caching library",
     "type": "library",
@@ -17,7 +16,7 @@
             "role": "lead"
         }
     ],
-    "time": "2021-03-13",
+    "time": "2021-11-05",
     "repositories": [
         {
             "type": "composer",
@@ -25,25 +24,42 @@
         }
     ],
     "require": {
-        "php": "^7",
-        "horde/compress_fast": "^2 || dev-FRAMEWORK_6_0",
-        "horde/exception": "^3 || dev-FRAMEWORK_6_0",
-        "horde/util": "^3 || dev-FRAMEWORK_6_0",
+        "php": "^7.4 || ^8",
+        "horde/compress_fast": "^2",
+        "horde/exception": "^3",
+        "horde/util": "^3",
         "ext-hash": "*"
     },
+    "require-dev": {
+        "horde/test": "^3",
+        "horde/db": "^3",
+        "horde/hashtable": "^2",
+        "horde/log": "^3",
+        "horde/memcache": "^3",
+        "horde/mongo": "^2"
+    },
     "suggest": {
-        "horde/db": "^3 || dev-FRAMEWORK_6_0",
-        "horde/hashtable": "^2 || dev-FRAMEWORK_6_0",
-        "horde/log": "^3 || dev-FRAMEWORK_6_0",
-        "horde/,emcache": "^3 || dev-FRAMEWORK_6_0",
-        "horde/mongo": "^2 || dev-FRAMEWORK_6_0",
+        "horde/db": "^3",
+        "horde/hashtable": "^2",
+        "horde/log": "^3",
+        "horde/memcache": "^3",
+        "horde/mongo": "^2",
         "ext-eaccelerator": "0.9.5",
         "ext-xcache": "*",
-        "ext-apc": "*"
+        "ext-apcu": "*"
     },
     "autoload": {
         "psr-0": {
             "Horde_Cache": "lib/"
+        },
+        "psr-4": {
+            "Horde\\Cache\\": "src/"
         }
-    }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Horde\\Cache\\Test\\": "test/"
+        }
+    },
+    "minimum-stability": "dev"
 }
