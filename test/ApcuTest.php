@@ -31,10 +31,15 @@ class ApcuTest extends TestBase
             $this->reason = 'APCu extension not loaded';
             return;
         }
-        return new Cache(
+        $cache = new Cache(
             new ApcuStorage([
                 'prefix' => 'horde_cache_test'
             ])
         );
+        if (!$cache->testReadWrite()) {
+            $this->reason = 'APCu extension did not pass basic read/write test, setup issues?';
+            return;
+        }
+        return $cache;
     }
 }
