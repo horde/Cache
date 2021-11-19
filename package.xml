@@ -16,7 +16,7 @@
   <email>slusarz@horde.org</email>
   <active>no</active>
  </lead>
- <date>2021-03-13</date>
+ <date>2021-11-19</date>
  <version>
   <release>3.0.0alpha4</release>
   <api>3.0.0alpha1</api>
@@ -27,10 +27,18 @@
  </stability>
  <license uri="http://www.horde.org/licenses/lgpl21">LGPL-2.1</license>
  <notes>
-* 
+* [rla] Upgraded to namespaced code complying with PSR-12 and PHPStan level 1.
+* |+
  </notes>
  <contents>
   <dir baseinstalldir="/" name="/">
+   <dir name=".github">
+    <dir name="workflows">
+     <file name="ci.yml" role="php" />
+     <file name="phpdoc.yml" role="php" />
+     <file name="update-satis.yml" role="php" />
+    </dir> <!-- /.github/workflows -->
+   </dir> <!-- /.github -->
    <dir name="doc">
     <dir name="Horde">
      <dir name="Cache">
@@ -71,38 +79,51 @@
      </dir> <!-- /migration/Horde/Cache -->
     </dir> <!-- /migration/Horde -->
    </dir> <!-- /migration -->
+   <dir name="src">
+    <file name="ApcuStorage.php" role="php" />
+    <file name="BaseStorage.php" role="php" />
+    <file name="Cache.php" role="php" />
+    <file name="CacheStorage.php" role="php" />
+    <file name="Exception.php" role="php" />
+    <file name="FileStorage.php" role="php" />
+    <file name="HashtableStorage.php" role="php" />
+    <file name="MemcacheStorage.php" role="php" />
+    <file name="MemoryoverlayStorage.php" role="php" />
+    <file name="MemoryStorage.php" role="php" />
+    <file name="MockStorage.php" role="php" />
+    <file name="MongoStorage.php" role="php" />
+    <file name="NullStorage.php" role="php" />
+    <file name="SessionStorage.php" role="php" />
+    <file name="SqlStorage.php" role="php" />
+    <file name="StackStorage.php" role="php" />
+   </dir> <!-- /src -->
    <dir name="test">
-    <dir name="Horde">
-     <dir name="Cache">
-      <dir name="Sql">
-       <dir name="Pdo">
-        <file name="MysqlTest.php" role="test" />
-        <file name="PgsqlTest.php" role="test" />
-        <file name="SqliteTest.php" role="test" />
-       </dir> <!-- /test/Horde/Cache/Sql/Pdo -->
-       <file name="Base.php" role="test" />
-       <file name="MysqliTest.php" role="test" />
-       <file name="MysqlTest.php" role="test" />
-       <file name="Oci8Test.php" role="test" />
-      </dir> <!-- /test/Horde/Cache/Sql -->
-      <dir name="Stub">
-       <file name="File.php" role="test" />
-      </dir> <!-- /test/Horde/Cache/Stub -->
-      <file name="AllTests.php" role="test" />
-      <file name="ApcTest.php" role="test" />
-      <file name="bootstrap.php" role="test" />
-      <file name="conf.php.dist" role="test" />
-      <file name="EacceleratorTest.php" role="test" />
-      <file name="FileTest.php" role="test" />
-      <file name="HashtableTest.php" role="test" />
-      <file name="MemcacheTest.php" role="test" />
-      <file name="MemoryTest.php" role="test" />
-      <file name="MongoTest.php" role="test" />
-      <file name="SessionTest.php" role="test" />
-      <file name="TestBase.php" role="test" />
-      <file name="XcacheTest.php" role="test" />
-     </dir> <!-- /test/Horde/Cache -->
-    </dir> <!-- /test/Horde -->
+    <dir name="Sql">
+     <dir name="Pdo">
+      <file name="MysqlTest.php" role="test" />
+      <file name="PgsqlTest.php" role="test" />
+      <file name="SqliteTest.php" role="test" />
+     </dir> <!-- /test/Sql/Pdo -->
+     <file name="Base.php" role="test" />
+     <file name="MysqliTest.php" role="test" />
+     <file name="MysqlTest.php" role="test" />
+     <file name="Oci8Test.php" role="test" />
+    </dir> <!-- /test/Sql -->
+    <dir name="Stub">
+     <file name="File.php" role="test" />
+    </dir> <!-- /test/Stub -->
+    <file name="AllTests.php" role="test" />
+    <file name="ApcuTest.php" role="test" />
+    <file name="bootstrap.php" role="test" />
+    <file name="conf.ci.php" role="test" />
+    <file name="conf.php.dist" role="test" />
+    <file name="FileTest.php" role="test" />
+    <file name="HashtableTest.php" role="test" />
+    <file name="MemcacheTest.php" role="test" />
+    <file name="MemoryTest.php" role="test" />
+    <file name="MongoTest.php" role="test" />
+    <file name="SessionTest.php" role="test" />
+    <file name="TestBase.php" role="test" />
    </dir> <!-- /test -->
    <file name="LICENSE" role="doc" />
   </dir> <!-- / -->
@@ -110,9 +131,9 @@
  <dependencies>
   <required>
    <php>
-    <min>7.0.0</min>
-    <max>8.0.0alpha1</max>
-    <exclude>8.0.0alpha1</exclude>
+    <min>7.4.0</min>
+    <max>9.0.0alpha1</max>
+    <exclude>9.0.0alpha1</exclude>
    </php>
    <pearinstaller>
     <min>1.7.0</min>
@@ -131,12 +152,15 @@
     <name>xcache</name>
    </extension>
    <extension>
-    <name>apc</name>
+    <name>apcu</name>
    </extension>
   </optional>
  </dependencies>
  <phprelease>
   <filelist>
+   <install as="workflows/ci.yml" name=".github/workflows/ci.yml" />
+   <install as="workflows/phpdoc.yml" name=".github/workflows/phpdoc.yml" />
+   <install as="workflows/update-satis.yml" name=".github/workflows/update-satis.yml" />
    <install as="CHANGES" name="doc/Horde/Cache/CHANGES" />
    <install as="Horde/Cache.php" name="lib/Horde/Cache.php" />
    <install as="Horde/Cache/Exception.php" name="lib/Horde/Cache/Exception.php" />
@@ -158,66 +182,45 @@
    <install as="LICENSE" name="LICENSE" />
    <install as="migration/1_horde_cache_base_tables.php" name="migration/Horde/Cache/1_horde_cache_base_tables.php" />
    <install as="migration/2_horde_cache_fix_blob_length.php" name="migration/Horde/Cache/2_horde_cache_fix_blob_length.php" />
-   <install as="Horde/Cache/AllTests.php" name="test/Horde/Cache/AllTests.php" />
-   <install as="Horde/Cache/ApcTest.php" name="test/Horde/Cache/ApcTest.php" />
-   <install as="Horde/Cache/bootstrap.php" name="test/Horde/Cache/bootstrap.php" />
-   <install as="Horde/Cache/conf.php.dist" name="test/Horde/Cache/conf.php.dist" />
-   <install as="Horde/Cache/EacceleratorTest.php" name="test/Horde/Cache/EacceleratorTest.php" />
-   <install as="Horde/Cache/FileTest.php" name="test/Horde/Cache/FileTest.php" />
-   <install as="Horde/Cache/HashtableTest.php" name="test/Horde/Cache/HashtableTest.php" />
-   <install as="Horde/Cache/MemcacheTest.php" name="test/Horde/Cache/MemcacheTest.php" />
-   <install as="Horde/Cache/MemoryTest.php" name="test/Horde/Cache/MemoryTest.php" />
-   <install as="Horde/Cache/MongoTest.php" name="test/Horde/Cache/MongoTest.php" />
-   <install as="Horde/Cache/SessionTest.php" name="test/Horde/Cache/SessionTest.php" />
-   <install as="Horde/Cache/Sql/Base.php" name="test/Horde/Cache/Sql/Base.php" />
-   <install as="Horde/Cache/Sql/MysqliTest.php" name="test/Horde/Cache/Sql/MysqliTest.php" />
-   <install as="Horde/Cache/Sql/MysqlTest.php" name="test/Horde/Cache/Sql/MysqlTest.php" />
-   <install as="Horde/Cache/Sql/Oci8Test.php" name="test/Horde/Cache/Sql/Oci8Test.php" />
-   <install as="Horde/Cache/Sql/Pdo/MysqlTest.php" name="test/Horde/Cache/Sql/Pdo/MysqlTest.php" />
-   <install as="Horde/Cache/Sql/Pdo/PgsqlTest.php" name="test/Horde/Cache/Sql/Pdo/PgsqlTest.php" />
-   <install as="Horde/Cache/Sql/Pdo/SqliteTest.php" name="test/Horde/Cache/Sql/Pdo/SqliteTest.php" />
-   <install as="Horde/Cache/Stub/File.php" name="test/Horde/Cache/Stub/File.php" />
-   <install as="Horde/Cache/TestBase.php" name="test/Horde/Cache/TestBase.php" />
-   <install as="Horde/Cache/XcacheTest.php" name="test/Horde/Cache/XcacheTest.php" />
+   <install as="ApcuStorage.php" name="src/ApcuStorage.php" />
+   <install as="BaseStorage.php" name="src/BaseStorage.php" />
+   <install as="Cache.php" name="src/Cache.php" />
+   <install as="CacheStorage.php" name="src/CacheStorage.php" />
+   <install as="Exception.php" name="src/Exception.php" />
+   <install as="FileStorage.php" name="src/FileStorage.php" />
+   <install as="HashtableStorage.php" name="src/HashtableStorage.php" />
+   <install as="MemcacheStorage.php" name="src/MemcacheStorage.php" />
+   <install as="MemoryoverlayStorage.php" name="src/MemoryoverlayStorage.php" />
+   <install as="MemoryStorage.php" name="src/MemoryStorage.php" />
+   <install as="MockStorage.php" name="src/MockStorage.php" />
+   <install as="MongoStorage.php" name="src/MongoStorage.php" />
+   <install as="NullStorage.php" name="src/NullStorage.php" />
+   <install as="SessionStorage.php" name="src/SessionStorage.php" />
+   <install as="SqlStorage.php" name="src/SqlStorage.php" />
+   <install as="StackStorage.php" name="src/StackStorage.php" />
+   <install as="AllTests.php" name="test/AllTests.php" />
+   <install as="ApcuTest.php" name="test/ApcuTest.php" />
+   <install as="bootstrap.php" name="test/bootstrap.php" />
+   <install as="conf.ci.php" name="test/conf.ci.php" />
+   <install as="conf.php.dist" name="test/conf.php.dist" />
+   <install as="FileTest.php" name="test/FileTest.php" />
+   <install as="HashtableTest.php" name="test/HashtableTest.php" />
+   <install as="MemcacheTest.php" name="test/MemcacheTest.php" />
+   <install as="MemoryTest.php" name="test/MemoryTest.php" />
+   <install as="MongoTest.php" name="test/MongoTest.php" />
+   <install as="SessionTest.php" name="test/SessionTest.php" />
+   <install as="Sql/Base.php" name="test/Sql/Base.php" />
+   <install as="Sql/MysqliTest.php" name="test/Sql/MysqliTest.php" />
+   <install as="Sql/MysqlTest.php" name="test/Sql/MysqlTest.php" />
+   <install as="Sql/Oci8Test.php" name="test/Sql/Oci8Test.php" />
+   <install as="Sql/Pdo/MysqlTest.php" name="test/Sql/Pdo/MysqlTest.php" />
+   <install as="Sql/Pdo/PgsqlTest.php" name="test/Sql/Pdo/PgsqlTest.php" />
+   <install as="Sql/Pdo/SqliteTest.php" name="test/Sql/Pdo/SqliteTest.php" />
+   <install as="Stub/File.php" name="test/Stub/File.php" />
+   <install as="TestBase.php" name="test/TestBase.php" />
   </filelist>
  </phprelease>
  <changelog>
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
   <release>
    <version>
     <release>0.0.1</release>
@@ -793,7 +796,8 @@
    <date>2021-03-13</date>
    <license uri="http://www.horde.org/licenses/lgpl21">LGPL-2.1</license>
    <notes>
-* 
+* [rla] Upgraded to namespaced code complying with PSR-12 and PHPStan level 1.
+* |+
    </notes>
   </release>
  </changelog>

@@ -2,7 +2,8 @@
 v3.0.0alpha4
 ------------
 
-
+[rla] Upgraded to namespaced code complying with PSR-12 and PHPStan level 1.
+|+
 
 
 ------------

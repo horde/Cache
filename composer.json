@@ -16,7 +16,7 @@
             "role": "lead"
         }
     ],
-    "time": "2021-11-05",
+    "time": "2021-11-19",
     "repositories": [
         {
             "type": "composer",
@@ -60,6 +60,5 @@
         "psr-4": {
             "Horde\\Cache\\Test\\": "test/"
         }
-    },
-    "minimum-stability": "dev"
+    }
 }
