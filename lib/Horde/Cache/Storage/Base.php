@@ -123,12 +123,24 @@ abstract class Horde_Cache_Storage_Base implements Serializable
             $this->_logger
         ));
     }
+    public function __serialize(): array
+    {
+        return [
+            $this->_params,
+            $this->_logger
+        ];
+    }
 
     /**
      */
     public function unserialize($data)
     {
         @list($this->_params, $this->_logger) = @unserialize($data);
+        $this->_initOb();
+    }
+    public function __unserialize(array $data): void
+    {
+        list($this->_params, $this->_logger) = $data;
         $this->_initOb();
     }
 
