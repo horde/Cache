@@ -120,10 +120,8 @@ abstract class BaseStorage implements CacheStorage
      */
     abstract public function clear();
 
-    /* Serializable methods. */
+    /* Serializable methods and PHP 7.4+ equivalents */
 
-    /**
-     */
     public function serialize(): string
     {
         return serialize([
@@ -132,11 +130,23 @@ abstract class BaseStorage implements CacheStorage
         ]);
     }
 
-    /**
-     */
     public function unserialize($data)
     {
         @[$this->params, $this->logger] = @unserialize($data);
+        $this->_initOb();
+    }
+
+    public function __serialize(): array
+    {
+        return [
+            $this->params,
+            $this->logger,
+        ];
+    }
+
+    public function __unserialize(array $data): void
+    {
+        @[$this->params, $this->logger] = $data;
         $this->_initOb();
     }
 }
