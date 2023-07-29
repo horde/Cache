@@ -138,7 +138,7 @@ class Horde_Cache_FileTest extends Horde_Cache_TestBase
             . $this->dir . "/c/caf8e34be07426ae7127c1b4829983c1\t"
             . ($time - 100) . "\n"
         );
-        $this->assertFileNotExists($this->dir . '/horde_cache_gc');
+        $this->assertFileDoesNotExist($this->dir . '/horde_cache_gc');
     }
 
     public function testGarbageCollection()
@@ -159,8 +159,8 @@ class Horde_Cache_FileTest extends Horde_Cache_TestBase
         $storage->gc();
         $this->assertFileExists($this->dir . '/7/8/horde_cache_test78f825aaa0103319aaa1a30bf4fe3ada');
         $this->assertFileExists($this->dir . '/3/6/horde_cache_test3631578538a2d6ba5879b31a9a42f290');
-        $this->assertFileNotExists($this->dir . '/c/2/horde_cache_testc2add694bf942dc77b376592d9c862cd');
-        $this->assertFileNotExists($this->dir . '/c/a/horde_cache_testcaf8e34be07426ae7127c1b4829983c1');
+        $this->assertFileDoesNotExist($this->dir . '/c/2/horde_cache_testc2add694bf942dc77b376592d9c862cd');
+        $this->assertFileDoesNotExist($this->dir . '/c/a/horde_cache_testcaf8e34be07426ae7127c1b4829983c1');
     }
 
     public function tearDown(): void
