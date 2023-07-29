@@ -19,6 +19,7 @@
  * @license  http://www.horde.org/licenses/lgpl21 LGPL 2.1
  * @package  Cache
  */
+#[\AllowDynamicProperties]
 class Horde_Cache_Sql_Base extends Horde_Cache_TestBase
 {
     protected function _getCache($params = array())
