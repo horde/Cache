@@ -39,7 +39,7 @@ class Horde_Cache_XcacheTest extends Horde_Cache_TestBase
         $this->markTestSkipped('Not supported');
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         if ($this->cache) {
             $this->cache->expire('key1');

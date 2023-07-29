@@ -162,7 +162,7 @@ class Horde_Cache_FileTest extends Horde_Cache_TestBase
         $this->assertFileNotExists($this->dir . '/c/a/horde_cache_testcaf8e34be07426ae7127c1b4829983c1');
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         system('rm -r ' . $this->dir);

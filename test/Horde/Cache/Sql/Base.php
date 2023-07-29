@@ -49,7 +49,7 @@ class Horde_Cache_Sql_Base extends Horde_Cache_TestBase
     }
 
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         $this->db->delete('DELETE FROM horde_cache');

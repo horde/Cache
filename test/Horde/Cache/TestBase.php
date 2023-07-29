@@ -27,7 +27,7 @@ abstract class Horde_Cache_TestBase extends Horde_Test_Case
 
     abstract protected function _getCache($params = array());
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->cache = $this->_getCache();
         if (!$this->cache) {
@@ -109,7 +109,7 @@ abstract class Horde_Cache_TestBase extends Horde_Test_Case
         $this->assertEquals('data1', $this->cache->get('key1', 0));
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         if ($this->cache) {
             $this->cache->clear();

@@ -53,7 +53,7 @@ class Horde_Cache_MongoTest extends Horde_Cache_TestBase
         return new Horde_Cache($storage);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         if (!empty($this->mongo)) {
