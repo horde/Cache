@@ -19,31 +19,25 @@
     "version": "2.5.6",
     "time": "2017-11-11",
     "repositories": [
-        {
-            "type": "pear",
-            "url": "https://pear.horde.org"
-        }
     ],
     "require": {
         "php": "^5.3 || ^7",
-        "pear-pear.horde.org/Horde_Compress_Fast": "^1",
-        "pear-pear.horde.org/Horde_Exception": "^2",
-        "pear-pear.horde.org/Horde_Util": "^2",
+        "horde/compress_fast": "^1",
+        "horde/exception": "^2",
+        "horde/util": "^2",
         "ext-hash": "*"
     },
     "suggest": {
-        "pear-pear.horde.org/Horde_Db": "^2.1",
-        "pear-pear.horde.org/Horde_HashTable": "^1",
-        "pear-pear.horde.org/Horde_Log": "^2",
-        "pear-pear.horde.org/Horde_Memcache": "^2",
-        "pear-pear.horde.org/Horde_Mongo": "^1",
-        "pear-pecl.php.net/APC": "^3.1.1",
+        "horde/db": "^2.1",
+        "horde/hashtable": "^1",
+        "horde/log": "^2",
+        "horde/memcache": "^2",
+        "horde/mongo": "^1",
+        "ext-apc": "^3.1.1",
         "ext-eaccelerator": "0.9.5",
         "ext-xcache": "*"
     },
     "replace": {
-        "pear-pear.horde.org/Horde_Cache": "2.*",
-        "pear-horde/Horde_Cache": "2.*"
     },
     "autoload": {
         "psr-0": {
