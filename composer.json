@@ -1,5 +1,4 @@
 {
-    "minimum-stability": "dev",
     "name": "horde/cache",
     "description": "Caching library",
     "type": "library",
@@ -17,13 +16,8 @@
             "role": "lead"
         }
     ],
-    "time": "2021-11-19",
-    "repositories": [
-        {
-            "type": "composer",
-            "url": "https://horde-satis.maintaina.com/"
-        }
-    ],
+    "time": "2025-05-22",
+    "repositories": [],
     "require": {
         "php": "^7.4 || ^8",
         "horde/compress_fast": "^2 || dev-FRAMEWORK_6_0",
@@ -60,6 +54,14 @@
     "autoload-dev": {
         "psr-4": {
             "Horde\\Cache\\Test\\": "test/"
+        }
+    },
+    "config": {
+        "allow-plugins": {}
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-FRAMEWORK_6_0": "3.x-dev"
         }
     }
 }
