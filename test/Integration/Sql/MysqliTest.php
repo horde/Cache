@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright 2016-2021 Horde LLC (http://www.horde.org/)
+ * Copyright 2016-2026 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information (LGPL). If you
  * did not receive this file, see http://www.horde.org/licenses/lgpl21.
@@ -10,8 +11,11 @@
  * @license  http://www.horde.org/licenses/lgpl21 LGPL 2.1
  * @package  Cache
  */
-namespace Horde\Cache\Test\Sql;
+
+namespace Horde\Cache\Test\Integration\Sql;
+
 use Horde_Db_Adapter_Mysqli;
+use Exception;
 
 /**
  * This class tests a MySQLi backend.
@@ -20,20 +24,28 @@ use Horde_Db_Adapter_Mysqli;
  * @category Horde
  * @license  http://www.horde.org/licenses/lgpl21 LGPL 2.1
  * @package  Cache
+ * @coversNothing
  */
 class MysqliTest extends Base
 {
-    protected function _getCache($params = array())
+    protected function _getCache($params = [])
     {
         if (!extension_loaded('mysqli')) {
             $this->reason = 'No mysqli extension';
             return;
         }
-        $config = self::getConfig('CACHE_SQL_MYSQLI_TEST_CONFIG',
-                                  __DIR__ . '/..');
+        $config = self::getConfig(
+            'CACHE_SQL_MYSQLI_TEST_CONFIG',
+            __DIR__ . '/../..'
+        );
         if ($config && !empty($config['cache']['sql']['mysqli'])) {
-            $this->db = new Horde_Db_Adapter_Mysqli($config['cache']['sql']['mysqli']);
-            return parent::_getCache($params);
+            try {
+                $this->db = new Horde_Db_Adapter_Mysqli($config['cache']['sql']['mysqli']);
+                return parent::_getCache($params);
+            } catch (Exception $e) {
+                $this->reason = 'Cannot connect to MySQLi: ' . $e->getMessage();
+                return;
+            }
         } else {
             $this->reason = 'No mysqli configuration';
         }

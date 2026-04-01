@@ -1,6 +1,7 @@
 <?php
-$conf['cache']['memcache']['hostspec'] = array('localhost');
-$conf['cache']['memcache']['port'] = array(11211);
+
+$conf['cache']['memcache']['hostspec'] = ['localhost'];
+$conf['cache']['memcache']['port'] = [11211];
 $conf['cache']['mongo']['hostspec'] = '';
 $conf['cache']['sql']['mysql']['host'] = 'localhost';
 $conf['cache']['sql']['mysql']['username'] = '';

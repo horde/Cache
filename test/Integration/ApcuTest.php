@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright 2016-2021 Horde LLC (http://www.horde.org/)
+ * Copyright 2016-2026 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information (LGPL). If you
  * did not receive this file, see http://www.horde.org/licenses/lgpl21.
@@ -10,6 +11,7 @@
  * @license  http://www.horde.org/licenses/lgpl21 LGPL 2.1
  * @package  Cache
  */
+
 namespace Horde\Cache\Test;
 
 use Horde\Cache\ApcuStorage;
@@ -22,6 +24,7 @@ use Horde\Cache\Cache;
  * @category Horde
  * @license  http://www.horde.org/licenses/lgpl21 LGPL 2.1
  * @package  Cache
+ * @coversNothing
  */
 class ApcuTest extends TestBase
 {
@@ -32,9 +35,9 @@ class ApcuTest extends TestBase
             return;
         }
         $cache = new Cache(
-            new ApcuStorage([
-                'prefix' => 'horde_cache_test'
-            ])
+            new ApcuStorage(
+                prefix: 'horde_cache_test'
+            )
         );
         if (!$cache->testReadWrite()) {
             $this->reason = 'APCu extension did not pass basic read/write test, setup issues?';

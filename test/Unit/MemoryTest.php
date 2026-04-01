@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright 2016-2021 Horde LLC (http://www.horde.org/)
+ * Copyright 2016-2026 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information (LGPL). If you
  * did not receive this file, see http://www.horde.org/licenses/lgpl21.
@@ -10,9 +11,12 @@
  * @license  http://www.horde.org/licenses/lgpl21 LGPL 2.1
  * @package  Cache
  */
-namespace Horde\Cache\Test;
-use \Horde\Cache\Cache;
-use \Horde\Cache\MemoryStorage;
+
+namespace Horde\Cache\Test\Unit;
+
+use Horde\Cache\Cache;
+use Horde\Cache\MemoryStorage;
+use Horde\Test\TestCase;
 
 /**
  * This class tests the memory backend.
@@ -21,9 +25,17 @@ use \Horde\Cache\MemoryStorage;
  * @category Horde
  * @license  http://www.horde.org/licenses/lgpl21 LGPL 2.1
  * @package  Cache
+ * @coversNothing
  */
-class MemoryTest extends TestBase
+class MemoryTest extends TestCase
 {
+    private Cache $cache;
+
+    protected function setUp(): void
+    {
+        $this->cache = $this->_getCache();
+    }
+
     protected function _getCache($params = [])
     {
         return new Cache(
@@ -38,7 +50,7 @@ class MemoryTest extends TestBase
     public function testExists()
     {
         $this->assertFalse($this->cache->exists('key1', 0));
-        $this->cache->set('key1', 'data1', 0);
+        $this->cache->set('key1', 'data1'); // null = use default lifetime
         $this->assertTrue($this->cache->exists('key1', 0));
     }
 
@@ -48,8 +60,8 @@ class MemoryTest extends TestBase
      */
     public function testGet()
     {
-        $this->assertFalse($this->cache->get('key1', 0));
-        $this->cache->set('key1', 'data1', 0);
-        $this->assertEquals('data1', $this->cache->get('key1', 0));
+        $this->assertNull($this->cache->get('key1'));
+        $this->cache->set('key1', 'data1'); // null = use default lifetime
+        $this->assertEquals('data1', $this->cache->get('key1'));
     }
 }

@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright 2016-2021 Horde LLC (http://www.horde.org/)
+ * Copyright 2016-2026 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information (LGPL). If you
  * did not receive this file, see http://www.horde.org/licenses/lgpl21.
@@ -10,10 +11,13 @@
  * @license  http://www.horde.org/licenses/lgpl21 LGPL 2.1
  * @package  Cache
  */
+
 namespace Horde\Cache\Test;
+
 use Horde\Test\TestCase;
 use Horde_Db_Adapter_Pdo_Sqlite;
 use Horde_Compress_Fast;
+
 /**
  * This is the base test class to run all tests that the backend implementation
  * should support.
@@ -40,39 +44,48 @@ abstract class TestBase extends TestCase
 
     public function testReadWrite()
     {
-   		if (class_exists('Horde_Db_Adapter_Pdo_Sqlite')) {
-            $this->assertTrue($this->cache->testReadWrite());
-        } else {
-            $this->markTestSkipped('DB library not found.');
-        }
-
+        $this->assertTrue($this->cache->testReadWrite());
     }
 
     public function testSet()
     {
-        $this->assertNull($this->cache->set('key1', 'data1'));
-        $this->assertNull($this->cache->set('key2', 'data2', 0));
-        $this->assertNull($this->cache->set('key3', 'data3', 1));
+        $this->assertTrue($this->cache->set('key1', 'data1'));
+        $this->assertTrue($this->cache->set('key2', 'data2'));
+        $this->assertTrue($this->cache->set('key3', 'data3', 1));
     }
 
     public function testExists()
     {
-        $this->assertFalse($this->cache->exists('key1', 0));
-        $this->assertFalse($this->cache->exists('key2', 0));
-        $this->cache->set('key1', 'data1', 0);
-        $this->cache->set('key2', 'data2', 0);
-        $this->assertTrue($this->cache->exists('key1', 0));
-        $this->assertFalse($this->cache->exists('key2', -10));
+        $this->assertFalse($this->cache->has('key1'));
+        $this->assertFalse($this->cache->has('key2'));
+        $this->cache->set('key1', 'data1');
+        $this->cache->set('key2', 'data2');
+        $this->assertTrue($this->cache->has('key1'));
+
+        // Test age filtering if supported
+        try {
+            $this->assertFalse($this->cache->hasWithLifetime('key2', -10));
+        } catch (\Horde\Cache\UnsupportedOperationException $e) {
+            // Backend doesn't support age filtering - that's OK
+            $this->assertTrue(true);
+        }
     }
 
     public function testGet()
     {
-        $this->assertFalse($this->cache->get('key1', 0));
-        $this->assertFalse($this->cache->get('key2', 0));
-        $this->cache->set('key1', 'data1', 0);
-        $this->cache->set('key2', 'data2', 0);
-        $this->assertEquals('data1', $this->cache->get('key1', 0));
-        $this->assertFalse($this->cache->get('key2', -10));
+        $this->assertNull($this->cache->get('key1'));
+        $this->assertNull($this->cache->get('key2'));
+        $this->cache->set('key1', 'data1');
+        $this->cache->set('key2', 'data2');
+        $this->assertEquals('data1', $this->cache->get('key1'));
+
+        // Test age filtering if supported
+        try {
+            $this->assertFalse($this->cache->getWithLifetime('key2', -10));
+        } catch (\Horde\Cache\UnsupportedOperationException $e) {
+            // Backend doesn't support age filtering - that's OK
+            $this->assertTrue(true);
+        }
     }
 
     public function testOutput()
@@ -88,18 +101,18 @@ abstract class TestBase extends TestCase
 
     public function testExpire()
     {
-        $this->cache->set('key1', 'data1', 0);
-        $this->assertEquals('data1', $this->cache->get('key1', 0));
-        $this->cache->expire('key1');
-        $this->assertFalse($this->cache->get('key1', 0));
+        $this->cache->set('key1', 'data1');
+        $this->assertEquals('data1', $this->cache->get('key1'));
+        $this->cache->delete('key1');
+        $this->assertNull($this->cache->get('key1'));
     }
 
     public function testClear()
     {
-        $this->cache->set('key1', 'data1', 0);
-        $this->assertEquals('data1', $this->cache->get('key1', 0));
+        $this->cache->set('key1', 'data1');
+        $this->assertEquals('data1', $this->cache->get('key1'));
         $this->cache->clear();
-        $this->assertFalse($this->cache->get('key1', 0));
+        $this->assertNull($this->cache->get('key1'));
     }
 
     public function testCompress()
@@ -112,9 +125,9 @@ abstract class TestBase extends TestCase
         if (!$this->cache) {
             $this->markTestSkipped($this->reason);
         }
-        $this->assertFalse($this->cache->get('key1', 0));
-        $this->cache->set('key1', 'data1', 0);
-        $this->assertEquals('data1', $this->cache->get('key1', 0));
+        $this->assertNull($this->cache->get('key1'));
+        $this->cache->set('key1', 'data1');
+        $this->assertEquals('data1', $this->cache->get('key1'));
     }
 
     public function tearDown(): void

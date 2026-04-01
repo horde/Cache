@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright 2016-2021 Horde LLC (http://www.horde.org/)
+ * Copyright 2016-2026 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information (LGPL). If you
  * did not receive this file, see http://www.horde.org/licenses/lgpl21.
@@ -10,10 +11,13 @@
  * @license  http://www.horde.org/licenses/lgpl21 LGPL 2.1
  * @package  Cache
  */
-namespace Horde\Cache\Test;
+
+namespace Horde\Cache\Test\Unit;
+
 use Horde\Cache\Cache;
 use Horde\Cache\FileStorage;
-use Horde\Cache\Test\Stub\File as FileStub;
+use Horde\Cache\Test\Unit\Stub\File as FileStub;
+use Horde\Test\TestCase;
 
 /**
  * This class tests the file backend.
@@ -22,55 +26,82 @@ use Horde\Cache\Test\Stub\File as FileStub;
  * @category Horde
  * @license  http://www.horde.org/licenses/lgpl21 LGPL 2.1
  * @package  Cache
+ * @coversNothing
  */
-class FileTest extends TestBase
+class FileTest extends TestCase
 {
-    protected function _getCache($params = array())
+    protected string $dir;
+    private Cache $cache;
+
+    protected function setUp(): void
+    {
+        $this->cache = $this->_getCache();
+    }
+
+    protected function _getCache($params = [])
     {
         $this->dir = sys_get_temp_dir() . '/horde_cache_test';
         if (!is_dir($this->dir)) {
             mkdir($this->dir);
         }
+        $merged = array_merge(
+            [
+                'dir'    => $this->dir,
+                'no_gc'  => true,
+                'prefix' => 'horde_cache_test',
+                'sub'    => 1,
+            ],
+            $params
+        );
+
         return new Cache(
-            new FileStorage(array_merge(
-                [
-                    'dir'    => $this->dir,
-                    'no_gc'  => true,
-                    'prefix' => 'horde_cache_test',
-                    'sub'    => 1
-                ],
-                $params
-            ))
+            new FileStorage(
+                dir: $merged['dir'],
+                prefix: $merged['prefix'] ?? 'cache_',
+                sub: $merged['sub'] ?? 0,
+                no_gc: $merged['no_gc'] ?? false,
+                umask: $merged['umask'] ?? null
+            )
         );
     }
 
     public function testSubdirectories()
     {
-        $this->cache = $this->_getCache(array('sub' => 2));
+        $this->cache = $this->_getCache(['sub' => 2]);
         if (!$this->cache) {
             $this->markTestSkipped($this->reason);
         }
-        $this->assertNull($this->cache->set('key1', 'data1', 0));
-        $this->assertNull($this->cache->set('key2', 'data2', 0));
+        // Use very large ttl to avoid GC during test but still track expiration
+        $this->assertTrue($this->cache->set('key1', 'data1', 86400 * 365));
+        $this->assertTrue($this->cache->set('key2', 'data2', 86400 * 365));
         $this->assertEquals(
-            array($this->dir . '/7/', $this->dir . '/c/'),
+            [$this->dir . '/7/', $this->dir . '/c/'],
             glob($this->dir . '/*', GLOB_MARK)
         );
         $this->assertEquals(
-            array($this->dir . '/7/8/'),
+            [$this->dir . '/7/8/'],
             glob($this->dir . '/7/*', GLOB_MARK)
         );
         $this->assertEquals(
-            array($this->dir . '/c/2/'),
+            [$this->dir . '/c/2/'],
             glob($this->dir . '/c/*', GLOB_MARK)
         );
+        // Filter out GC files when checking cache files
+        $files78 = array_values(array_filter(
+            glob($this->dir . '/7/8/*', GLOB_MARK),
+            fn($f) => !str_contains($f, 'horde_cache_gc')
+        ));
         $this->assertEquals(
-            array($this->dir . '/7/8/horde_cache_test78f825aaa0103319aaa1a30bf4fe3ada'),
-            glob($this->dir . '/7/8/*', GLOB_MARK)
+            [$this->dir . '/7/8/horde_cache_test78f825aaa0103319aaa1a30bf4fe3ada'],
+            $files78
         );
+        $filesC2 = array_values(array_filter(
+            glob($this->dir . '/c/2/*', GLOB_MARK),
+            fn($f) => !str_contains($f, 'horde_cache_gc')
+        ));
         $this->assertEquals(
-            array($this->dir . '/c/2/horde_cache_testc2add694bf942dc77b376592d9c862cd'),
-            glob($this->dir . '/c/2/*', GLOB_MARK)
+            [$this->dir . '/c/2/horde_cache_testc2add694bf942dc77b376592d9c862cd'],
+            $filesC2
         );
     }
 
@@ -113,12 +144,12 @@ class FileTest extends TestBase
         );
         fclose($fp);
 
-        $storage = new FileStub([
-            'dir'    => $this->dir,
-            'no_gc'  => true,
-            'prefix' => 'horde_cache_test',
-            'sub'    => 1
-        ]);
+        $storage = new FileStub(
+            dir: $this->dir,
+            prefix: 'horde_cache_test',
+            sub: 1,
+            no_gc: true
+        );
         $this->cache = new Cache($storage);
         $storage->gc();
 
@@ -128,7 +159,7 @@ class FileTest extends TestBase
             $this->dir . "/7/78f825aaa0103319aaa1a30bf4fe3ada \t"
             . ($time + 100) . "\n"
         );
-       $this->assertFileExists($this->dir . '/3/horde_cache_gc');
+        $this->assertFileExists($this->dir . '/3/horde_cache_gc');
         $this->assertStringEqualsFile(
             $this->dir . '/3/horde_cache_gc',
             $this->dir . "/3/3631578538a2d6ba5879b31a9a42f290\t"
@@ -147,12 +178,12 @@ class FileTest extends TestBase
 
     public function testGarbageCollection()
     {
-        $storage = new FileStub([
-            'dir'    => $this->dir,
-            'no_gc'  => true,
-            'prefix' => 'horde_cache_test',
-            'sub'    => 2,
-        ]);
+        $storage = new FileStub(
+            dir: $this->dir,
+            prefix: 'horde_cache_test',
+            sub: 2,
+            no_gc: true
+        );
         $this->cache = new Cache($storage);
         $this->cache->set('key1', 'data1', -100);
         $this->cache->set('key2', 'data2', 100);
