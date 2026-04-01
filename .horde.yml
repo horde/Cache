@@ -33,11 +33,12 @@ license:
   uri: http://www.horde.org/licenses/lgpl21
 dependencies:
   required:
-    php: ^7.4 || ^8
+    php: ^8.1
     composer:
       horde/compress_fast: ^2
       horde/exception: ^3
       horde/util: ^3
+      psr/log: ^3.0.2
     ext:
       hash: '*'
   optional:
@@ -45,7 +46,7 @@ dependencies:
       horde/db: ^3
       horde/hashtable: ^2
       horde/log: ^3
-      horde/memcache: ^3
+      horde/memcache: ^3.0.0-beta1
       horde/mongo: ^2
     ext:
       eaccelerator: 0.9.5
@@ -57,5 +58,11 @@ dependencies:
       horde/db: ^3
       horde/hashtable: ^2
       horde/log: ^3
-      horde/memcache: ^3
+      horde/memcache: ^3.0.0-beta1
       horde/mongo: ^2
+      horde/support: ^3
+keywords:
+  - psr-16
+provide:
+  psr/simple-cache-implementation: 3.0.0
+vendor: horde
