@@ -1,6 +1,9 @@
 <?php
+
+declare(strict_types=1);
+
 /**
- * Copyright 2006-2021 Horde LLC (http://www.horde.org/)
+ * Copyright 2006-2026 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information (LGPL). If you
  * did not receive this file, see http://www.horde.org/licenses/lgpl21.
@@ -13,106 +16,107 @@
 
 namespace Horde\Cache;
 
-use apcu_fetch;
-use apcu_store;
-use apcu_clear_cache;
-use time;
-use apcu_delete;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 /**
- * Cache storage in the Alternative PHP Cache (APC) or APCu.
+ * Cache storage in the Alternative PHP Cache (APCu).
+ *
+ * This is a minimal adapter over APCu native functions. APCu is PSR-16
+ * compatible with TTL-based expiration, so this storage does NOT support
+ * HordeCacheStorage (per-retrieval age filtering).
  *
  * @author    Duck <duck@obala.net>
  * @category  Horde
- * @copyright 2006-2021 Horde LLC
+ * @copyright 2006-2026 Horde LLC
  * @license   http://www.horde.org/licenses/lgpl21 LGPL 2.1
  * @package   Cache
  */
-class ApcuStorage extends BaseStorage
+class ApcuStorage implements SimpleCacheStorage
 {
     /**
      * Constructor.
      *
-     * @param array $params  Optional parameters:
-     * <pre>
-     *   - prefix: (string) The prefix to use for the cache keys.
-     *             DEFAULT: ''
-     * </pre>
+     * @param LoggerInterface $logger  Logger (defaults to NullLogger)
+     * @param string $prefix           Key prefix for namespacing
      */
-    public function __construct(array $params = [])
-    {
-        parent::__construct(array_merge(['prefix' => ''], $params));
-    }
+    public function __construct(
+        private LoggerInterface $logger = new NullLogger(),
+        private string $prefix = ''
+    ) {}
 
     /**
-     * @inheritDoc
-     */
-    public function get(string $key, int $lifetime = 0)
-    {
-        $key = $this->params['prefix'] . $key;
-        $this->_setExpire($key, $lifetime);
-        return apcu_fetch($key);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function set(string $key, $data, int $lifetime = 0)
-    {
-        $key = $this->params['prefix'] . $key;
-        if (apcu_store($key . '_expire', time(), $lifetime)) {
-            apcu_store($key, $data, $lifetime);
-        }
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function exists(string $key, int $lifetime = 0): bool
-    {
-        $key = $this->params['prefix'] . $key;
-        $this->_setExpire($key, $lifetime);
-        return (apcu_fetch($key) !== false);
-    }
-
-    /**
-     */
-    public function expire(string $key): bool
-    {
-        $key = $this->params['prefix'] . $key;
-        apcu_delete($key . '_expire');
-        return apcu_delete($key);
-    }
-
-    /**
-     */
-    public function clear()
-    {
-        if (!apcu_clear_cache()) {
-            throw new Exception('Clearing APCu cache failed');
-        }
-    }
-
-    /**
-     * Set expire time on each call since APC sets it on cache creation.
+     * Get cached value (PSR-16 semantics).
      *
-     * @param string $key        Cache key to expire.
-     * @param integer $lifetime  Lifetime of the data in seconds.
+     * @param string $key  Cache key
+     * @return mixed|false Value or false if not found/expired
      */
-    protected function _setExpire(string $key, int $lifetime)
+    public function get(string $key)
     {
-        if ($lifetime == 0) {
-            // Don't expire.
-            return;
-        }
+        $prefixedKey = $this->prefix . $key;
 
-        $expire = apcu_fetch($key . '_expire');
+        $this->logger->debug(sprintf('APCu get: %s', $key));
 
-        // Set prune period.
-        if ($expire + $lifetime < time()) {
-            // Expired
-            apcu_delete($key);
-            apcu_delete($key . '_expire');
-        }
+        $result = apcu_fetch($prefixedKey);
+
+        // Convert false to false (APCu returns false on miss)
+        return $result;
+    }
+
+    /**
+     * Check existence (PSR-16 semantics).
+     *
+     * @param string $key  Cache key
+     * @return bool True if exists and not expired
+     */
+    public function has(string $key): bool
+    {
+        return $this->get($key) !== false;
+    }
+
+    /**
+     * Store value with TTL (PSR-16 semantics).
+     *
+     * @param string $key   Cache key
+     * @param mixed $data   Data to store
+     * @param int $ttl      Seconds until expiration (0 = never)
+     * @return bool Success
+     */
+    public function set(string $key, mixed $data, int $ttl): bool
+    {
+        $prefixedKey = $this->prefix . $key;
+
+        $this->logger->debug(sprintf('APCu set: %s (ttl=%d)', $key, $ttl));
+
+        // APCu is PSR-16 native
+        return apcu_store($prefixedKey, $data, $ttl);
+    }
+
+    /**
+     * Delete cached value (PSR-16 semantics).
+     *
+     * @param string $key  Cache key
+     * @return bool Success
+     */
+    public function delete(string $key): bool
+    {
+        $prefixedKey = $this->prefix . $key;
+
+        $this->logger->debug(sprintf('APCu delete: %s', $key));
+
+        return apcu_delete($prefixedKey);
+    }
+
+    /**
+     * Clear all cached values (PSR-16 semantics).
+     *
+     * @return bool Success
+     */
+    public function clear(): bool
+    {
+        $this->logger->debug('APCu clear all');
+
+        // Flush entire APCu cache
+        return apcu_clear_cache();
     }
 }

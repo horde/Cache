@@ -1,6 +1,9 @@
 <?php
+
+declare(strict_types=1);
+
 /**
- * Copyright 2007-2021 Horde LLC (http://www.horde.org/)
+ * Copyright 2007-2026 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information (LGPL). If you
  * did not receive this file, see http://www.horde.org/licenses/lgpl21.
@@ -14,21 +17,24 @@
 
 namespace Horde\Cache;
 
-use Horde\Cache\Cache;
 use Horde_Db_Adapter;
-use InvalidArgumentException;
 use Horde_Db_Exception;
 use Horde_Db_Value_Binary;
-use Horde_Log;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 /**
- * Cache storage in a SQL databsae.
+ * Cache storage in a SQL database.
+ *
+ * Implements both SimpleCacheStorage (PSR-16 compatible TTL model) and
+ * HordeCacheStorage (per-retrieval age filtering).
  *
  * The table structure for the cache is as follows:
  * <pre>
- * CREATE TABLE hordecache (
+ * CREATE TABLE horde_cache (
  *     cache_id          VARCHAR(32) NOT NULL,
  *     cache_timestamp   BIGINT NOT NULL,
+ *     cache_expiration  BIGINT NOT NULL,
  *     cache_data        LONGBLOB,
  *     (Or on PostgreSQL:)
  *     cache_data        TEXT,
@@ -42,50 +48,27 @@ use Horde_Log;
  * @author    Ben Klang <ben@alkaloid.net>
  * @author    Michael Slusarz <slusarz@horde.org>
  * @category  Horde
- * @copyright 2007-2021 Horde LLC
+ * @copyright 2007-2026 Horde LLC
  * @license   http://www.horde.org/licenses/lgpl21 LGPL 2.1
  * @package   Cache
  */
-class SqlStorage extends BaseStorage
+class SqlStorage implements SimpleCacheStorage, HordeCacheStorage
 {
-    /**
-     * Handle for the current database connection.
-     *
-     * @var Horde_Db_Adapter
-     */
-    protected $db;
-
     /**
      * Constructor.
      *
-     * @param array $params  Parameters:
-     * <pre>
-     *   - db: (Horde_Db_Adapter) [REQUIRED] The DB instance.
-     *   - table: (string) The name of the cache table.
-     *            DEFAULT: 'hordecache'
-     * </pre>
+     * @param Horde_Db_Adapter $db      Database adapter
+     * @param LoggerInterface $logger   Logger (defaults to NullLogger)
+     * @param string $table             Cache table name
      */
-    public function __construct($params = [])
-    {
-        if (!isset($params['db'])) {
-            throw new InvalidArgumentException('Missing db parameter.');
-        }
-
-        parent::__construct(array_merge([
-            'table' => 'horde_cache',
-        ], $params));
-    }
+    public function __construct(
+        private Horde_Db_Adapter $db,
+        private LoggerInterface $logger = new NullLogger(),
+        private string $table = 'horde_cache'
+    ) {}
 
     /**
-     * @inheritDoc
-     */
-    protected function _initOb()
-    {
-        $this->db = $this->params['db'];
-    }
-
-    /**
-     * Destructor.
+     * Destructor - garbage collection.
      */
     public function __destruct()
     {
@@ -94,8 +77,8 @@ class SqlStorage extends BaseStorage
             return;
         }
 
-        $query = 'DELETE FROM ' . $this->params['table'] .
-                 ' WHERE cache_expiration < ? AND cache_expiration <> 0';
+        $query = 'DELETE FROM ' . $this->table
+                 . ' WHERE cache_expiration < ? AND cache_expiration <> 0';
         $values = [time()];
 
         try {
@@ -104,110 +87,195 @@ class SqlStorage extends BaseStorage
         }
     }
 
+    // ========== SimpleCacheStorage Interface (PSR-16 Compatible) ==========
+
     /**
-     * @inheritDoc
+     * Get cached value (PSR-16 semantics).
+     *
+     * Checks expiration only, no age filtering.
+     *
+     * @param string $key  Cache key (pre-validated by facade)
+     * @return mixed|false Value or false if not found/expired
      */
-    public function get(string $key, int $lifetime = 0)
+    public function get(string $key)
     {
-        $okey = $key;
-        $key = hash('md5', $key);
-
-        $timestamp = time();
-        $maxage = $timestamp - $lifetime;
-
-        /* Build SQL query. */
-        $query = 'SELECT cache_data FROM ' . $this->params['table'] .
-                 ' WHERE cache_id = ?';
-        $values = [$key];
-
-        // 0 lifetime checks for objects which have no expiration
-        if ($lifetime != 0) {
-            $query .= ' AND cache_timestamp >= ?';
-            $values[] = $maxage;
-        }
-
-        try {
-            $result = $this->db->selectValue($query, $values);
-            $columns = $this->db->columns($this->params['table']);
-        } catch (Horde_Db_Exception $e) {
-            return false;
-        }
-
-        if (!$result) {
-            /* No rows were found - cache miss */
-            if ($this->logger) {
-                $this->logger->log(sprintf('Cache miss: %s (Id %s newer than %d)', $okey, $key, $maxage), Horde_Log::DEBUG);
-            }
-            return false;
-        }
-
-        if ($this->logger) {
-            $this->logger->log(sprintf('Cache hit: %s (Id %s newer than %d)', $okey, $key, $maxage), Horde_Log::DEBUG);
-        }
-
-        return $columns['cache_data']->binaryToString($result);
+        // Delegate to Horde method with lifetime=0 (no age filtering)
+        return $this->getWithLifetime($key, 0);
     }
 
     /**
-     * @inheritDoc
+     * Check existence (PSR-16 semantics).
+     *
+     * @param string $key  Cache key (pre-validated by facade)
+     * @return bool True if exists and not expired
      */
-    public function set(string $key, $data, int $lifetime = 0)
+    public function has(string $key): bool
     {
-        $okey = $key;
-        $key = hash('md5', $key);
+        return $this->hasWithLifetime($key, 0);
+    }
+
+    /**
+     * Store value with TTL (PSR-16 semantics).
+     *
+     * @param string $key   Cache key (pre-validated by facade)
+     * @param mixed $data   Data to store
+     * @param int $ttl      Seconds until expiration (0 = never)
+     * @return bool Success
+     */
+    public function set(string $key, mixed $data, int $ttl): bool
+    {
+        // Hash key for SQL storage (for index performance)
+        $hashedKey = hash('md5', $key);
 
         $timestamp = time();
+        $expiration = ($ttl === 0) ? 0 : ($timestamp + $ttl);
 
-        // 0 lifetime indicates the object should not be GC'd.
-        $expiration = ($lifetime === 0)
-            ? 0
-            : ($lifetime + $timestamp);
+        $this->logger->debug(sprintf(
+            'Cache set: %s set at %d expires at %d',
+            $key,
+            $timestamp,
+            $expiration
+        ));
 
-        if ($this->logger) {
-            $this->logger->log(sprintf('Cache set: %s (Id %s set at %d expires at %d)', $okey, $key, $timestamp, $expiration), Horde_Log::DEBUG);
-        }
-
-        // Remove any old cache data and prevent duplicate keys
-        $query = 'DELETE FROM ' . $this->params['table'] . ' WHERE cache_id = ?';
-        $values = [$key];
+        // Remove old cache data
+        $query = 'DELETE FROM ' . $this->table . ' WHERE cache_id = ?';
         try {
-            $this->db->delete($query, $values);
+            $this->db->delete($query, [$hashedKey]);
         } catch (Horde_Db_Exception $e) {
         }
 
-        /* Build SQL query. */
+        // Insert new data
         $values = [
-            'cache_id' => $key,
+            'cache_id' => $hashedKey,
             'cache_timestamp' => $timestamp,
             'cache_expiration' => $expiration,
             'cache_data' => new Horde_Db_Value_Binary($data),
         ];
 
         try {
-            $this->db->insertBlob($this->params['table'], $values);
+            $this->db->insertBlob($this->table, $values);
+            return true;
         } catch (Horde_Db_Exception $e) {
-            throw new Exception($e);
+            return false;
         }
     }
 
     /**
-     * @inheritDoc
+     * Delete cached value (PSR-16 semantics).
+     *
+     * @param string $key  Cache key (pre-validated by facade)
+     * @return bool Success
      */
-    public function exists(string $key, int $lifetime = 0): bool
+    public function delete(string $key): bool
     {
-        $okey = $key;
-        $key = hash('md5', $key);
+        $hashedKey = hash('md5', $key);
+        $query = 'DELETE FROM ' . $this->table . ' WHERE cache_id = ?';
 
-        /* Build SQL query. */
-        $query = 'SELECT 1 FROM ' . $this->params['table'] .
-                 ' WHERE cache_id = ?';
-        $values = [$key];
+        try {
+            $this->db->delete($query, [$hashedKey]);
+            return true;
+        } catch (Horde_Db_Exception $e) {
+            return false;
+        }
+    }
 
-        // 0 lifetime checks for objects which have no expiration
+    /**
+     * Clear all cached values (PSR-16 semantics).
+     *
+     * @return bool Success
+     */
+    public function clear(): bool
+    {
+        $query = 'DELETE FROM ' . $this->table;
+
+        try {
+            $this->db->delete($query);
+            return true;
+        } catch (Horde_Db_Exception $e) {
+            return false;
+        }
+    }
+
+    // ========== HordeCacheStorage Interface (Age Filtering) ==========
+
+    /**
+     * Get cached value with per-retrieval age filtering (Horde semantics).
+     *
+     * @param string $key       Cache key (pre-validated by facade)
+     * @param int $lifetime     Only return if cached within last N seconds (0 = no age check)
+     * @return mixed|false      Value or false if not found/too old
+     */
+    public function getWithLifetime(string $key, int $lifetime)
+    {
+        $hashedKey = hash('md5', $key);
+        $timestamp = time();
+        $maxage = $timestamp - $lifetime;
+
+        // Build query
+        $query = 'SELECT cache_data FROM ' . $this->table . ' WHERE cache_id = ?';
+        $values = [$hashedKey];
+
+        // Add age filter if requested
         if ($lifetime != 0) {
             $query .= ' AND cache_timestamp >= ?';
-            $values[] = time() - $lifetime;
+            $values[] = $maxage;
         }
+
+        // Check expiration (always)
+        $query .= ' AND (cache_expiration = 0 OR cache_expiration > ?)';
+        $values[] = $timestamp;
+
+        try {
+            $result = $this->db->selectValue($query, $values);
+            $columns = $this->db->columns($this->table);
+        } catch (Horde_Db_Exception $e) {
+            return false;
+        }
+
+        if (!$result) {
+            $this->logger->debug(sprintf(
+                'Cache miss: %s (newer than %d)',
+                $key,
+                $maxage
+            ));
+            return false;
+        }
+
+        $this->logger->debug(sprintf(
+            'Cache hit: %s (newer than %d)',
+            $key,
+            $maxage
+        ));
+
+        return $columns['cache_data']->binaryToString($result);
+    }
+
+    /**
+     * Check existence with per-retrieval age filtering (Horde semantics).
+     *
+     * @param string $key       Cache key (pre-validated by facade)
+     * @param int $lifetime     Only return true if cached within last N seconds (0 = no age check)
+     * @return bool             True if exists and not too old
+     */
+    public function hasWithLifetime(string $key, int $lifetime): bool
+    {
+        $hashedKey = hash('md5', $key);
+        $timestamp = time();
+        $maxage = $timestamp - $lifetime;
+
+        // Build query
+        $query = 'SELECT 1 FROM ' . $this->table . ' WHERE cache_id = ?';
+        $values = [$hashedKey];
+
+        // Add age filter if requested
+        if ($lifetime != 0) {
+            $query .= ' AND cache_timestamp >= ?';
+            $values[] = $maxage;
+        }
+
+        // Check expiration (always)
+        $query .= ' AND (cache_expiration = 0 OR cache_expiration > ?)';
+        $values[] = $timestamp;
 
         try {
             $result = $this->db->selectValue($query, $values);
@@ -215,52 +283,21 @@ class SqlStorage extends BaseStorage
             return false;
         }
 
-        $timestamp = time();
         if (empty($result)) {
-            if ($this->logger) {
-                $this->logger->log(sprintf('Cache exists() miss: %s (Id %s newer than %d)', $okey, $key, $timestamp), Horde_Log::DEBUG);
-            }
+            $this->logger->debug(sprintf(
+                'Cache exists() miss: %s (newer than %d)',
+                $key,
+                $maxage
+            ));
             return false;
         }
 
-        if ($this->logger) {
-            $this->logger->log(sprintf('Cache exists() hit: %s (Id %s newer than %d)', $okey, $key, $timestamp), Horde_Log::DEBUG);
-        }
+        $this->logger->debug(sprintf(
+            'Cache exists() hit: %s (newer than %d)',
+            $key,
+            $maxage
+        ));
 
         return true;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function expire(string $key): bool
-    {
-        $key = hash('md5', $key);
-
-        $query = 'DELETE FROM ' . $this->params['table'] .
-                 ' WHERE cache_id = ?';
-        $values = [$key];
-
-        try {
-            $this->db->delete($query, $values);
-        } catch (Horde_Db_Exception $e) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function clear()
-    {
-        $query = 'DELETE FROM ' . $this->params['table'];
-
-        try {
-            $this->db->delete($query);
-        } catch (Horde_Db_Exception $e) {
-            throw new Exception($e);
-        }
     }
 }

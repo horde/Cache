@@ -1,11 +1,12 @@
 <?php
+
 /**
- * Copyright 2010-2021 Horde LLC (http://www.horde.org/)
+ * Copyright 2010-2026 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information (LGPL). If you
  * did not receive this file, see http://www.horde.org/licenses/lgpl21.
  *
- * @author   Ralf Lang <lang@b1-systems.de>
+ * @author   Ralf Lang <ralf.lang@ralf-lang.de>
  * @category Horde
  * @license  http://www.horde.org/licenses/lgpl21 LGPL 2.1
  * @package  Cache
@@ -14,7 +15,7 @@ declare(strict_types=1);
 
 namespace Horde\Cache;
 
-use Horde_Log_Logger;
+use Horde\Log\Logger;
 use Serializable;
 use serialize;
 use unserialize;
@@ -22,9 +23,9 @@ use unserialize;
 /**
  * The interface of the cache storage driver.
  *
- * @author    Ralf Lang <lang@b1-systems.de>
+ * @author    Ralf Lang <ralf.lang@ralf-lang.de>
  * @category  Horde
- * @copyright 2010-2021 Horde LLC
+ * @copyright 2010-2026 Horde LLC
  * @license   http://www.horde.org/licenses/lgpl21 LGPL 2.1
  * @package   Cache
  */
@@ -33,9 +34,9 @@ interface CacheStorage extends Serializable
     /**
      * Set the logging object.
      *
-     * @param Horde_Log_Logger $logger  Log object.
+     * @param Logger $logger  Log object.
      */
-    public function setLogger(Horde_Log_Logger $logger): void;
+    public function setLogger(Logger $logger): void;
 
     /**
      * Retrieve cached data.

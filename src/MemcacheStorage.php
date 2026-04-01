@@ -1,6 +1,9 @@
 <?php
+
+declare(strict_types=1);
+
 /**
- * Copyright 2006-2021 Horde LLC (http://www.horde.org/)
+ * Copyright 2006-2026 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information (LGPL). If you
  * did not receive this file, see http://www.horde.org/licenses/lgpl21.
@@ -14,144 +17,112 @@
 
 namespace Horde\Cache;
 
-use Horde_Memcache;
-use InvalidArgumentException;
+use Horde\Memcache\MemcacheApi;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 /**
  * Cache storage on a memcache installation.
  *
+ * This is a minimal adapter over Horde\Memcache\MemcacheApi, which is itself
+ * PSR-16 compliant. We simply delegate to it with optional key prefixing.
+ *
  * @author     Duck <duck@obala.net>
  * @author     Michael Slusarz <slusarz@horde.org>
  * @category   Horde
- * @copyright  2006-2021 Horde LLC
+ * @copyright  2006-2026 Horde LLC
  * @license    http://www.horde.org/licenses/lgpl21 LGPL 2.1
  * @package    Cache
  * @deprecated Use HashTable driver instead.
  */
-class MemcacheStorage extends BaseStorage
+class MemcacheStorage implements SimpleCacheStorage
 {
     /**
-     * Cache results of exists()/get() calls (since we will get the entire
-     * object on an exists() call anyway).
+     * Constructor.
      *
-     * @var array
+     * @param MemcacheApi $memcache     Memcache API instance
+     * @param LoggerInterface $logger   Logger (defaults to NullLogger)
+     * @param string $prefix            Key prefix for namespacing
      */
-    protected array $objectcache = [];
+    public function __construct(
+        private MemcacheApi $memcache,
+        private LoggerInterface $logger = new NullLogger(),
+        private string $prefix = ''
+    ) {}
 
     /**
-     * Memcache object.
+     * Get cached value (PSR-16 semantics).
      *
-     * @var Horde_Memcache
+     * @param string $key  Cache key
+     * @return mixed|false Value or false if not found/expired
      */
-    protected Horde_Memcache $memcache;
+    public function get(string $key)
+    {
+        $prefixedKey = $this->prefix . $key;
+
+        $this->logger->debug(sprintf('Memcache get: %s', $key));
+
+        // MemcacheApi is PSR-16 native, returns null on miss
+        $result = $this->memcache->get($prefixedKey);
+
+        // Convert null to false for storage interface compatibility
+        return $result ?? false;
+    }
 
     /**
-     * Construct a new Horde_Cache_Memcache object.
+     * Check existence (PSR-16 semantics).
      *
-     * @param array $params  Parameter array:
-     * <pre>
-     *   - memcache: (Horde_Memcache) [REQUIRED] A Horde_Memcache object.
-     *   - prefix: (string) The prefix to use for the cache keys.
-     *             DEFAULT: ''
-     * </pre>
+     * @param string $key  Cache key
+     * @return bool True if exists and not expired
      */
-    public function __construct(array $params = [])
+    public function has(string $key): bool
     {
-        if (!isset($params['memcache'])) {
-            if (isset($params['hashtable'])) {
-                $params['memcache'] = $params['hashtable'];
-            } else {
-                throw new InvalidArgumentException('Missing memcache object');
-            }
-        }
-
-        parent::__construct(array_merge([
-            'prefix' => '',
-        ], $params));
+        return $this->get($key) !== false;
     }
 
     /**
-     * @inheritDoc
+     * Store value with TTL (PSR-16 semantics).
+     *
+     * @param string $key   Cache key
+     * @param mixed $data   Data to store
+     * @param int $ttl      Seconds until expiration (0 = never)
+     * @return bool Success
      */
-    protected function _initOb()
+    public function set(string $key, mixed $data, int $ttl): bool
     {
-        $this->memcache = $this->params['memcache'];
+        $prefixedKey = $this->prefix . $key;
+
+        $this->logger->debug(sprintf('Memcache set: %s (ttl=%d)', $key, $ttl));
+
+        // MemcacheApi is PSR-16 native
+        return $this->memcache->set($prefixedKey, $data, $ttl);
     }
 
     /**
-     * @inheritDoc
+     * Delete cached value (PSR-16 semantics).
+     *
+     * @param string $key  Cache key
+     * @return bool Success
      */
-    public function get(string $key, int $lifetime = 0)
+    public function delete(string $key): bool
     {
-        $original_key = $key;
-        $key = $this->params['prefix'] . $key;
-        if (isset($this->objectcache[$key])) {
-            return $this->objectcache[$key];
-        }
+        $prefixedKey = $this->prefix . $key;
 
-        $key_list = [$key];
-        if (!empty($lifetime)) {
-            $key_list[] = $key . '_e';
-        }
+        $this->logger->debug(sprintf('Memcache delete: %s', $key));
 
-        $res = $this->memcache->get($key_list);
-
-        if ($res === false) {
-            return $this->objectcache[$key] = false;
-        }
-
-        // If we can't find the expire time, assume we have exceeded it.
-        if (empty($lifetime) ||
-            (($res[$key . '_e'] !== false) &&
-             ($res[$key . '_e'] + $lifetime > time()))) {
-            $this->objectcache[$key] = $res[$key];
-        } else {
-            $this->expire($original_key);
-            return false;
-        }
-
-        return $res[$key];
+        return $this->memcache->delete($prefixedKey);
     }
 
     /**
-     * @inheritDoc
+     * Clear all cached values (PSR-16 semantics).
+     *
+     * @return bool Success
      */
-    public function set(string $key, $data, int $lifetime = 0)
+    public function clear(): bool
     {
-        $key = $this->params['prefix'] . $key;
+        $this->logger->debug('Memcache clear all');
 
-        if ($this->memcache->set($key . '_e', (string) time(), $lifetime) !== false) {
-            $this->memcache->set($key, $data, $lifetime);
-            unset($this->objectcache[$key]);
-        }
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function exists(string $key, int $lifetime = 0): bool
-    {
-        return ($this->get($key, $lifetime) !== false);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function expire(string $key): bool
-    {
-        $key = $this->params['prefix'] . $key;
-        $this->objectcache[$key] = false;
-        $this->memcache->delete($key . '_e');
-
-        return $this->memcache->delete($key);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function clear()
-    {
-        $this->memcache->flush();
-        $this->objectcache = [];
+        // Flush entire memcache server
+        return $this->memcache->clear();
     }
 }
