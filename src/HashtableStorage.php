@@ -16,12 +16,12 @@ declare(strict_types=1);
 
 namespace Horde\Cache;
 
-use Horde_HashTable_Base;
+use Horde\HashTable\HashTable;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
 /**
- * Cache storage using the Horde_HashTable interface.
+ * Cache storage using the Horde\HashTable interface.
  *
  * Implements both SimpleCacheStorage (PSR-16 compatible TTL model) and
  * HordeCacheStorage (per-retrieval age filtering).
@@ -41,12 +41,12 @@ class HashtableStorage implements SimpleCacheStorage, HordeCacheStorage
     /**
      * Constructor.
      *
-     * @param Horde_HashTable_Base $hashtable  HashTable instance
-     * @param LoggerInterface $logger          Logger (defaults to NullLogger)
-     * @param string $prefix                   Key prefix for namespacing
+     * @param HashTable $hashtable  HashTable instance
+     * @param LoggerInterface $logger        Logger (defaults to NullLogger)
+     * @param string $prefix                 Key prefix for namespacing
      */
     public function __construct(
-        private Horde_HashTable_Base $hashtable,
+        private HashTable $hashtable,
         private LoggerInterface $logger = new NullLogger(),
         private string $prefix = ''
     ) {}
@@ -63,7 +63,6 @@ class HashtableStorage implements SimpleCacheStorage, HordeCacheStorage
      */
     public function get(string $key)
     {
-        // Delegate to Horde method with lifetime=0 (no age filtering)
         return $this->getWithLifetime($key, 0);
     }
 
@@ -88,11 +87,10 @@ class HashtableStorage implements SimpleCacheStorage, HordeCacheStorage
      */
     public function set(string $key, mixed $data, int $ttl): bool
     {
-        $opts = ['expire' => $ttl];
+        $expire = $ttl > 0 ? $ttl : null;
 
-        // Store data and timestamp
-        $this->hashtable->set($this->_getKey($key), $data, $opts);
-        $this->hashtable->set($this->_getKey($key, true), (string) time(), $opts);
+        $this->hashtable->set($this->_getKey($key), $data, $expire);
+        $this->hashtable->set($this->_getKey($key, true), (string) time(), $expire);
 
         $this->logger->debug(sprintf('HashTable cache set: %s (ttl=%d)', $key, $ttl));
         return true;
@@ -106,13 +104,13 @@ class HashtableStorage implements SimpleCacheStorage, HordeCacheStorage
      */
     public function delete(string $key): bool
     {
-        $result = (bool) $this->hashtable->delete([
+        $this->hashtable->delete([
             $this->_getKey($key),
             $this->_getKey($key, true),
         ]);
 
         $this->logger->debug(sprintf('HashTable cache delete: %s', $key));
-        return $result;
+        return true;
     }
 
     /**
@@ -143,7 +141,7 @@ class HashtableStorage implements SimpleCacheStorage, HordeCacheStorage
         }
 
         $dkey = $this->_getKey($key);
-        $res = $this->hashtable->get([$dkey]);
+        $res = $this->hashtable->getMultiple([$dkey]);
 
         return $res[$dkey] ?? false;
     }
@@ -165,14 +163,12 @@ class HashtableStorage implements SimpleCacheStorage, HordeCacheStorage
             $query[] = $lkey = $this->_getKey($key, true);
         }
 
-        $res = $this->hashtable->get($query);
+        $res = $this->hashtable->getMultiple($query);
 
-        // Check if data exists
-        if (!isset($res[$dkey]) || $res[$dkey] === false) {
+        if (!isset($res[$dkey]) || $res[$dkey] === null) {
             return false;
         }
 
-        // Check age filter if requested
         if ($lifetime && $lkey) {
             if (!isset($res[$lkey]) || (($lifetime + (int) $res[$lkey]) < time())) {
                 return false;
