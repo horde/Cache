@@ -19,7 +19,7 @@
     "keywords": [
         "psr-16"
     ],
-    "time": "2026-04-01",
+    "time": "2026-04-29",
     "repositories": [],
     "require": {
         "horde/horde-installer-plugin": "dev-FRAMEWORK_6_0 || ^3 || ^2",
