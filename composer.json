@@ -68,6 +68,9 @@
             "horde/horde-installer-plugin": true
         }
     },
+    "provide": {
+        "psr/simple-cache-implementation": "3.0.0"
+    },
     "extra": {
         "branch-alias": {
             "dev-FRAMEWORK_6_0": "3.x-dev"
