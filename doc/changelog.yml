@@ -76,6 +76,17 @@
     chore(metadata): Expose we now provide a PSR-16 implementation and require a PSR-3 logger
     test: Cover PSR-16 implementation with unit tests
     feat: PSR-16 Cache interface
+3.0.0-RC1:
+  api: 3.0.0-RC1
+  state:
+    release: RC
+    api: RC
+  date: 2026-05-02
+  license:
+    identifier: LGPL-2.1-only
+    uri: https://spdx.org/licenses/LGPL-2.1-only.html
+  notes: |-
+    test: Refactor Hashtable tests to use the modern hashtable drivers
 2.5.5:
   api: 2.5.0
   state:
