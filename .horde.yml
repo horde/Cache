@@ -64,6 +64,6 @@ dependencies:
       horde/support: ^3
 keywords:
   - psr-16
-provide:
+provides:
   psr/simple-cache-implementation: 3.0.0
 vendor: horde
