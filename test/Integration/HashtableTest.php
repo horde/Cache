@@ -16,7 +16,7 @@ namespace Horde\Cache\Test;
 
 use Horde\Cache\Cache;
 use Horde\Cache\HashtableStorage;
-use Horde_HashTable_Memory;
+use Horde\HashTable\Driver\Memory;
 
 /**
  * This class tests the Horde_Hashtable backend.
@@ -31,13 +31,13 @@ class HashtableTest extends TestBase
 {
     protected function _getCache($params = [])
     {
-        if (!class_exists('Horde_HashTable_Memory')) {
-            $this->reason = 'Horde_HashTable not installed';
+        if (!class_exists(Memory::class)) {
+            $this->reason = 'Horde HashTable not installed';
             return;
         }
         return new Cache(
             new HashtableStorage(
-                hashtable: new Horde_HashTable_Memory(),
+                hashtable: new Memory(),
                 prefix: 'horde_cache_test'
             )
         );
