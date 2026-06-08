@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright 2010-2017 Horde LLC (http://www.horde.org/)
+ * Copyright 2010-2026 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information (LGPL). If you
  * did not receive this file, see http://www.horde.org/licenses/lgpl21.
@@ -38,11 +39,11 @@ class Horde_Cache_Storage_Session extends Horde_Cache_Storage_Base
      *              DEFAULT: 'horde_cache_session'
      * </pre>
      */
-    public function __construct(array $params = array())
+    public function __construct(array $params = [])
     {
-        $params = array_merge(array(
-            'sess_name' => 'horde_cache_session'
-        ), $params);
+        $params = array_merge([
+            'sess_name' => 'horde_cache_session',
+        ], $params);
 
         parent::__construct($params);
     }
@@ -53,7 +54,7 @@ class Horde_Cache_Storage_Session extends Horde_Cache_Storage_Base
     protected function _initOb()
     {
         if (!isset($_SESSION[$this->_params['sess_name']])) {
-            $_SESSION[$this->_params['sess_name']] = array();
+            $_SESSION[$this->_params['sess_name']] = [];
         }
         $this->_sess = &$_SESSION[$this->_params['sess_name']];
     }
@@ -71,10 +72,10 @@ class Horde_Cache_Storage_Session extends Horde_Cache_Storage_Base
      */
     public function set($key, $data, $lifetime = 0)
     {
-        $this->_sess[$key] = array(
+        $this->_sess[$key] = [
             'd' => $data,
-            'l' => $lifetime
-        );
+            'l' => $lifetime,
+        ];
     }
 
     /**
@@ -83,8 +84,8 @@ class Horde_Cache_Storage_Session extends Horde_Cache_Storage_Base
     {
         if (isset($this->_sess[$key])) {
             /* 0 means no expire. */
-            if (($lifetime == 0) ||
-                ((time() - $lifetime) <= $this->_sess[$key]['l'])) {
+            if (($lifetime == 0)
+                || ((time() - $lifetime) <= $this->_sess[$key]['l'])) {
                 return true;
             }
 
@@ -110,7 +111,7 @@ class Horde_Cache_Storage_Session extends Horde_Cache_Storage_Base
      */
     public function clear()
     {
-        $this->_sess = array();
+        $this->_sess = [];
     }
 
 }

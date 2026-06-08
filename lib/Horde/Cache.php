@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright 1999-2017 Horde LLC (http://www.horde.org/)
+ * Copyright 1999-2026 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information (LGPL). If you
  * did not receive this file, see http://www.horde.org/licenses/lgpl21.
@@ -31,10 +32,10 @@ class Horde_Cache
      *
      * @var array
      */
-    protected $_params = array(
+    protected $_params = [
         'compress' => false,
-        'lifetime' => 86400
-    );
+        'lifetime' => 86400,
+    ];
 
     /**
      * Logger.
@@ -63,9 +64,10 @@ class Horde_Cache
      *   - logger: (Horde_Log_Logger) Log object to use for log/debug messages.
      * </pre>
      */
-    public function __construct(Horde_Cache_Storage_Base $storage,
-                                array $params = array())
-    {
+    public function __construct(
+        Horde_Cache_Storage_Base $storage,
+        array $params = []
+    ) {
         if (isset($params['logger'])) {
             $this->_logger = $params['logger'];
             unset($params['logger']);
@@ -197,7 +199,8 @@ class Horde_Cache
                 $this->_storage->expire($key);
                 return true;
             }
-        } catch (Exception $e) {}
+        } catch (Exception $e) {
+        }
 
         return false;
     }

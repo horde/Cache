@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright 2013-2017 Horde LLC (http://www.horde.org/)
+ * Copyright 2013-2026 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information (LGPL). If you
  * did not receive this file, see http://www.horde.org/licenses/lgpl21.
@@ -29,7 +30,7 @@ class Horde_Cache_Storage_Memoryoverlay extends Horde_Cache_Storage_Base
      *
      * @var array
      */
-    private $_cache = array();
+    private $_cache = [];
 
     /**
      * Constructor.
@@ -40,7 +41,7 @@ class Horde_Cache_Storage_Memoryoverlay extends Horde_Cache_Storage_Base
      *              backend.
      * </pre>
      */
-    public function __construct(array $params = array())
+    public function __construct(array $params = [])
     {
         if (!isset($params['backend'])) {
             throw new InvalidArgumentException('Missing backend parameter.');
@@ -89,7 +90,7 @@ class Horde_Cache_Storage_Memoryoverlay extends Horde_Cache_Storage_Base
      */
     public function clear()
     {
-        $this->_cache = array();
+        $this->_cache = [];
         $this->_params['backend']->clear();
     }
 

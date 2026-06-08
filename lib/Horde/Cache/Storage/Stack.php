@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright 2010-2017 Horde LLC (http://www.horde.org/)
+ * Copyright 2010-2026 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information (LGPL). If you
  * did not receive this file, see http://www.horde.org/licenses/lgpl21.
@@ -29,7 +30,7 @@ class Horde_Cache_Storage_Stack extends Horde_Cache_Storage_Base
      *
      * @var string
      */
-    protected $_stack = array();
+    protected $_stack = [];
 
     /**
      * Constructor.
@@ -41,7 +42,7 @@ class Horde_Cache_Storage_Stack extends Horde_Cache_Storage_Base
      *            the 'master' driver, for purposes of writes.
      * </pre>
      */
-    public function __construct(array $params = array())
+    public function __construct(array $params = [])
     {
         if (!isset($params['stack'])) {
             throw new InvalidArgumentException('Missing stack parameter.');

@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright 2013-2017 Horde LLC (http://www.horde.org/)
+ * Copyright 2013-2026 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information (LGPL). If you
  * did not receive this file, see http://www.horde.org/licenses/lgpl21.
@@ -38,15 +39,15 @@ class Horde_Cache_Storage_Hashtable extends Horde_Cache_Storage_Base
      *             DEFAULT: ''
      * </pre>
      */
-    public function __construct(array $params = array())
+    public function __construct(array $params = [])
     {
         if (!isset($params['hashtable'])) {
             throw new InvalidArgumentException('Missing hashtable parameter.');
         }
 
-        parent::__construct(array_merge(array(
-            'prefix' => ''
-        ), $params));
+        parent::__construct(array_merge([
+            'prefix' => '',
+        ], $params));
     }
 
     /**
@@ -61,15 +62,15 @@ class Horde_Cache_Storage_Hashtable extends Horde_Cache_Storage_Base
     public function get($key, $lifetime = 0)
     {
         $dkey = $this->_getKey($key);
-        $query = array($dkey);
+        $query = [$dkey];
         if ($lifetime) {
             $query[] = $lkey = $this->_getKey($key, true);
         }
 
         $res = $this->_hash->get($query);
 
-        if ($lifetime &&
-            (!$res[$lkey] || (($lifetime + $res[$lkey]) < time()))) {
+        if ($lifetime
+            && (!$res[$lkey] || (($lifetime + $res[$lkey]) < time()))) {
             return false;
         }
 
@@ -80,9 +81,9 @@ class Horde_Cache_Storage_Hashtable extends Horde_Cache_Storage_Base
      */
     public function set($key, $data, $lifetime = 0)
     {
-        $opts = array_filter(array(
-            'expire' => $lifetime
-        ));
+        $opts = array_filter([
+            'expire' => $lifetime,
+        ]);
 
         $this->_hash->set($this->_getKey($key), $data, $opts);
         $this->_hash->set($this->_getKey($key, true), time(), $opts);
@@ -99,10 +100,10 @@ class Horde_Cache_Storage_Hashtable extends Horde_Cache_Storage_Base
      */
     public function expire($key)
     {
-        $this->_hash->delete(array(
+        $this->_hash->delete([
             $this->_getKey($key),
-            $this->_getKey($key, true)
-        ));
+            $this->_getKey($key, true),
+        ]);
     }
 
     /**
