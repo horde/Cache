@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright 2010-2017 Horde LLC (http://www.horde.org/)
+ * Copyright 2010-2026 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information (LGPL). If you
  * did not receive this file, see http://www.horde.org/licenses/lgpl21.
@@ -34,14 +35,14 @@ abstract class Horde_Cache_Storage_Base implements Serializable
      *
      * @var array
      */
-    protected $_params = array();
+    protected $_params = [];
 
     /**
      * Constructor.
      *
      * @param array $params  Configuration parameters.
      */
-    public function __construct(array $params = array())
+    public function __construct(array $params = [])
     {
         $this->_params = array_merge($this->_params, $params);
         $this->_initOb();
@@ -50,9 +51,7 @@ abstract class Horde_Cache_Storage_Base implements Serializable
     /**
      * Do initialization tasks.
      */
-    protected function _initOb()
-    {
-    }
+    protected function _initOb() {}
 
     /**
      * Set the logging object.
@@ -118,16 +117,16 @@ abstract class Horde_Cache_Storage_Base implements Serializable
      */
     public function serialize()
     {
-        return serialize(array(
+        return serialize([
             $this->_params,
-            $this->_logger
-        ));
+            $this->_logger,
+        ]);
     }
     public function __serialize(): array
     {
         return [
             $this->_params,
-            $this->_logger
+            $this->_logger,
         ];
     }
 
@@ -135,12 +134,12 @@ abstract class Horde_Cache_Storage_Base implements Serializable
      */
     public function unserialize($data)
     {
-        @list($this->_params, $this->_logger) = @unserialize($data);
+        @[$this->_params, $this->_logger] = @unserialize($data);
         $this->_initOb();
     }
     public function __unserialize(array $data): void
     {
-        list($this->_params, $this->_logger) = $data;
+        [$this->_params, $this->_logger] = $data;
         $this->_initOb();
     }
 

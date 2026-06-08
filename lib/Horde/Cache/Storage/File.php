@@ -1,6 +1,9 @@
 <?php
+
+use Horde\Util\Util;
+
 /**
- * Copyright 1999-2017 Horde LLC (http://www.horde.org/)
+ * Copyright 1999-2026 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information (LGPL). If you
  * did not receive this file, see http://www.horde.org/licenses/lgpl21.
@@ -27,14 +30,14 @@
 class Horde_Cache_Storage_File extends Horde_Cache_Storage_Base
 {
     /* Location of the garbage collection data file. */
-    const GC_FILE = 'horde_cache_gc';
+    public const GC_FILE = 'horde_cache_gc';
 
     /**
      * List of key to filename mappings.
      *
      * @var array
      */
-    protected $_file = array();
+    protected $_file = [];
 
     /**
      * Constructor.
@@ -52,12 +55,12 @@ class Horde_Cache_Storage_File extends Horde_Cache_Storage_Base
      *          DEFAULT: 0
      * </pre>
      */
-    public function __construct(array $params = array())
+    public function __construct(array $params = [])
     {
-        $params = array_merge(array(
+        $params = array_merge([
             'prefix' => 'cache_',
-            'sub' => 0
-        ), $params);
+            'sub' => 0,
+        ], $params);
 
         if (!isset($params['dir']) || !@is_dir($params['dir'])) {
             $params['dir'] = sys_get_temp_dir();
@@ -74,8 +77,8 @@ class Horde_Cache_Storage_File extends Horde_Cache_Storage_Base
         $c_time = time();
 
         /* Only do garbage collection 0.1% of the time we create an object. */
-        if (!empty($this->_params['no_gc']) ||
-            (intval(substr($c_time, -3)) !== 0)) {
+        if (!empty($this->_params['no_gc'])
+            || (intval(substr($c_time, -3)) !== 0)) {
             return;
         }
 
@@ -104,9 +107,9 @@ class Horde_Cache_Storage_File extends Horde_Cache_Storage_Base
     public function set($key, $data, $lifetime = 0)
     {
         $filename = $this->_keyToFile($key, true);
-        $tmp_file = Horde_Util::getTempFile('HordeCache', true, $this->_params['dir']);
+        $tmp_file = Util::getTempFile('HordeCache', true, $this->_params['dir']);
         if (isset($this->_params['umask'])) {
-            chmod($tmp_file, 0666 & ~$this->_params['umask']);
+            chmod($tmp_file, 0o666 & ~$this->_params['umask']);
         }
 
         if (file_put_contents($tmp_file, $data) === false) {
@@ -115,8 +118,8 @@ class Horde_Cache_Storage_File extends Horde_Cache_Storage_Base
 
         @rename($tmp_file, $filename);
 
-        if ($lifetime &&
-            ($fp = @fopen(dirname($filename) . '/' . self::GC_FILE, 'a'))) {
+        if ($lifetime
+            && ($fp = @fopen(dirname($filename) . '/' . self::GC_FILE, 'a'))) {
             // This may result in duplicate entries in GC_FILE, but we
             // will take care of these whenever we do GC and this is quicker
             // than having to check every time we access the file.
@@ -136,8 +139,8 @@ class Horde_Cache_Storage_File extends Horde_Cache_Storage_Base
             /* 0 means no expire.
              * Also, If the file was been created after the supplied value,
              * the data is valid (fresh). */
-            if (($lifetime == 0) ||
-                (time() - $lifetime <= filemtime($filename))) {
+            if (($lifetime == 0)
+                || (time() - $lifetime <= filemtime($filename))) {
                 return true;
             }
 
@@ -175,7 +178,7 @@ class Horde_Cache_Storage_File extends Horde_Cache_Storage_Base
      */
     protected function _getCacheFiles($start = null)
     {
-        $paths = array();
+        $paths = [];
 
         try {
             $it = empty($this->_params['sub'])
@@ -186,9 +189,9 @@ class Horde_Cache_Storage_File extends Horde_Cache_Storage_Base
         }
 
         foreach ($it as $val) {
-            if (!$val->isDir() &&
-                ($fname = $val->getFilename()) &&
-                (strpos($fname, $this->_params['prefix']) === 0)) {
+            if (!$val->isDir()
+                && ($fname = $val->getFilename())
+                && (strpos($fname, $this->_params['prefix']) === 0)) {
                 $paths[$fname] = $val->getPathname();
             }
         }
@@ -254,8 +257,8 @@ class Horde_Cache_Storage_File extends Horde_Cache_Storage_Base
     {
         $c_time = time();
 
-        if (!empty($this->_params['sub']) &&
-            file_exists($this->_params['dir'] . '/' . self::GC_FILE)) {
+        if (!empty($this->_params['sub'])
+            && file_exists($this->_params['dir'] . '/' . self::GC_FILE)) {
             // If we cannot migrate, we cannot GC either, because we expect the
             // new format.
             try {
@@ -266,7 +269,7 @@ class Horde_Cache_Storage_File extends Horde_Cache_Storage_Base
         }
 
         foreach ($this->_getGCFiles() as $filename) {
-            $excepts = array();
+            $excepts = [];
             if (is_readable($filename)) {
                 $fp = fopen($filename, 'r');
                 while (!feof($fp) && ($data = fgets($fp))) {
@@ -276,8 +279,8 @@ class Horde_Cache_Storage_File extends Horde_Cache_Storage_Base
             }
 
             foreach ($this->_getCacheFiles(dirname($filename)) as $pname) {
-                if (!empty($excepts[$pname]) &&
-                    ($c_time > $excepts[$pname])) {
+                if (!empty($excepts[$pname])
+                    && ($c_time > $excepts[$pname])) {
                     @unlink($pname);
                     unset($excepts[$pname]);
                 }
@@ -303,7 +306,7 @@ class Horde_Cache_Storage_File extends Horde_Cache_Storage_Base
             return;
         }
 
-        $fhs = array();
+        $fhs = [];
         $fp = fopen($filename, 'r');
         if (!flock($fp, LOCK_EX)) {
             throw new Horde_Cache_Exception('Cannot acquire lock for old garbage collection index');
@@ -312,7 +315,7 @@ class Horde_Cache_Storage_File extends Horde_Cache_Storage_Base
         // Loops through all cached files from the old index and write their GC
         // information to the new GC indexes.
         while (!feof($fp) && ($data = fgets($fp))) {
-            list($path, $time) = explode("\t", trim($data), 2);
+            [$path, $time] = explode("\t", trim($data), 2);
             $dir = dirname($path);
             if ($dir == $this->_params['dir']) {
                 continue;
@@ -325,7 +328,7 @@ class Horde_Cache_Storage_File extends Horde_Cache_Storage_Base
                     foreach ($fhs as $fh) {
                         fclose($fh);
                     }
-                    $fhs = array();
+                    $fhs = [];
                     $fhs[$dir] = @fopen($dir . '/' . self::GC_FILE, 'a');
                 }
                 if (!$fhs[$dir]) {

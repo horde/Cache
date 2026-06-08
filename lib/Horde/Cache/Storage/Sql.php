@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright 2007-2017 Horde LLC (http://www.horde.org/)
+ * Copyright 2007-2026 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information (LGPL). If you
  * did not receive this file, see http://www.horde.org/licenses/lgpl21.
@@ -56,15 +57,15 @@ class Horde_Cache_Storage_Sql extends Horde_Cache_Storage_Base
      *            DEFAULT: 'horde_cache'
      * </pre>
      */
-    public function __construct($params = array())
+    public function __construct($params = [])
     {
         if (!isset($params['db'])) {
             throw new InvalidArgumentException('Missing db parameter.');
         }
 
-        parent::__construct(array_merge(array(
+        parent::__construct(array_merge([
             'table' => 'horde_cache',
-        ), $params));
+        ], $params));
     }
 
     /**
@@ -84,13 +85,14 @@ class Horde_Cache_Storage_Sql extends Horde_Cache_Storage_Base
             return;
         }
 
-        $query = 'DELETE FROM ' . $this->_params['table'] .
-                 ' WHERE cache_expiration < ? AND cache_expiration <> 0';
-        $values = array(time());
+        $query = 'DELETE FROM ' . $this->_params['table']
+                 . ' WHERE cache_expiration < ? AND cache_expiration <> 0';
+        $values = [time()];
 
         try {
             $this->_db->delete($query, $values);
-        } catch (Horde_Db_Exception $e) {}
+        } catch (Horde_Db_Exception $e) {
+        }
     }
 
     /**
@@ -104,9 +106,9 @@ class Horde_Cache_Storage_Sql extends Horde_Cache_Storage_Base
         $maxage = $timestamp - $lifetime;
 
         /* Build SQL query. */
-        $query = 'SELECT cache_data FROM ' . $this->_params['table'] .
-                 ' WHERE cache_id = ?';
-        $values = array($key);
+        $query = 'SELECT cache_data FROM ' . $this->_params['table']
+                 . ' WHERE cache_id = ?';
+        $values = [$key];
 
         // 0 lifetime checks for objects which have no expiration
         if ($lifetime != 0) {
@@ -156,18 +158,19 @@ class Horde_Cache_Storage_Sql extends Horde_Cache_Storage_Base
 
         // Remove any old cache data and prevent duplicate keys
         $query = 'DELETE FROM ' . $this->_params['table'] . ' WHERE cache_id = ?';
-        $values = array($key);
+        $values = [$key];
         try {
             $this->_db->delete($query, $values);
-        } catch (Horde_Db_Exception $e) {}
+        } catch (Horde_Db_Exception $e) {
+        }
 
         /* Build SQL query. */
-        $values = array(
+        $values = [
             'cache_id' => $key,
             'cache_timestamp' => $timestamp,
             'cache_expiration' => $expiration,
-            'cache_data' => new Horde_Db_Value_Binary($data)
-        );
+            'cache_data' => new Horde_Db_Value_Binary($data),
+        ];
 
         try {
             $this->_db->insertBlob($this->_params['table'], $values);
@@ -184,9 +187,9 @@ class Horde_Cache_Storage_Sql extends Horde_Cache_Storage_Base
         $key = hash('md5', $key);
 
         /* Build SQL query. */
-        $query = 'SELECT 1 FROM ' . $this->_params['table'] .
-                 ' WHERE cache_id = ?';
-        $values = array($key);
+        $query = 'SELECT 1 FROM ' . $this->_params['table']
+                 . ' WHERE cache_id = ?';
+        $values = [$key];
 
         // 0 lifetime checks for objects which have no expiration
         if ($lifetime != 0) {
@@ -221,9 +224,9 @@ class Horde_Cache_Storage_Sql extends Horde_Cache_Storage_Base
     {
         $key = hash('md5', $key);
 
-        $query = 'DELETE FROM ' . $this->_params['table'] .
-                 ' WHERE cache_id = ?';
-        $values = array($key);
+        $query = 'DELETE FROM ' . $this->_params['table']
+                 . ' WHERE cache_id = ?';
+        $values = [$key];
 
         try {
             $this->_db->delete($query, $values);

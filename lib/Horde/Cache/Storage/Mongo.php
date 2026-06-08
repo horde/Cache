@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright 2013-2017 Horde LLC (http://www.horde.org/)
+ * Copyright 2013-2026 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information (LGPL). If you
  * did not receive this file, see http://www.horde.org/licenses/lgpl21.
@@ -23,10 +24,10 @@
 class Horde_Cache_Storage_Mongo extends Horde_Cache_Storage_Base
 {
     /* Field names. */
-    const CID = 'cid';
-    const DATA = 'data';
-    const EXPIRE = 'expire';
-    const TIMESTAMP = 'ts';
+    public const CID = 'cid';
+    public const DATA = 'data';
+    public const EXPIRE = 'expire';
+    public const TIMESTAMP = 'ts';
 
     /**
      * The MongoDB Collection object for the cache data.
@@ -44,15 +45,15 @@ class Horde_Cache_Storage_Mongo extends Horde_Cache_Storage_Base
      *   - mongo_db: [REQUIRED] (Horde_Mongo_Client) A MongoDB client object.
      * </pre>
      */
-    public function __construct(array $params = array())
+    public function __construct(array $params = [])
     {
         if (!isset($params['mongo_db'])) {
             throw new InvalidArgumentException('Missing mongo_db parameter.');
         }
 
-        parent::__construct(array_merge(array(
-            'collection' => 'horde_cache'
-        ), $params));
+        parent::__construct(array_merge([
+            'collection' => 'horde_cache',
+        ], $params));
     }
 
     /**
@@ -63,12 +64,12 @@ class Horde_Cache_Storage_Mongo extends Horde_Cache_Storage_Base
         /* Only do garbage collection 0.1% of the time we create an object. */
         if (substr(time(), -3) === '000') {
             try {
-                $this->_db->remove(array(
-                    self::EXPIRE => array(
+                $this->_db->remove([
+                    self::EXPIRE => [
                         '$exists' => true,
-                        '$lt' => time()
-                    )
-                ));
+                        '$lt' => time(),
+                    ],
+                ]);
             } catch (MongoException $e) {
                 $this->_logger->log($e->getMessage(), 'DEBUG');
             }
@@ -90,17 +91,17 @@ class Horde_Cache_Storage_Mongo extends Horde_Cache_Storage_Base
         $key = $this->_getCid($key);
 
         /* Build SQL query. */
-        $query = array(
-            self::CID => $key
-        );
+        $query = [
+            self::CID => $key,
+        ];
 
         // 0 lifetime checks for objects which have no expiration
         if ($lifetime != 0) {
-            $query[self::TIMESTAMP] = array('$gte' => time() - $lifetime);
+            $query[self::TIMESTAMP] = ['$gte' => time() - $lifetime];
         }
 
         try {
-            $result = $this->_db->findOne($query, array(self::DATA => true));
+            $result = $this->_db->findOne($query, [self::DATA => true]);
         } catch (MongoException $e) {
             $this->_logger->log($e->getMessage(), 'DEBUG');
             return false;
@@ -129,11 +130,11 @@ class Horde_Cache_Storage_Mongo extends Horde_Cache_Storage_Base
         $key = $this->_getCid($key);
         $curr = time();
 
-        $data = array(
+        $data = [
             self::CID => $key,
             self::DATA => new MongoBinData($data, MongoBinData::BYTE_ARRAY),
-            self::TIMESTAMP => $curr
-        );
+            self::TIMESTAMP => $curr,
+        ];
 
         // 0 lifetime indicates the object should not be GC'd.
         if (!empty($lifetime)) {
@@ -152,14 +153,14 @@ class Horde_Cache_Storage_Mongo extends Horde_Cache_Storage_Base
 
         // Remove any old cache data and prevent duplicate keys
         try {
-            $this->_db->update(array(
-                self::CID => $key
-            ), array(
-                '$set' => $data
-            ), array(
+            $this->_db->update([
+                self::CID => $key,
+            ], [
+                '$set' => $data,
+            ], [
                 'upsert' => true,
-                'w' => 0
-            ));
+                'w' => 0,
+            ]);
         } catch (MongoException $e) {
             $this->_logger->log($e->getMessage(), 'DEBUG');
             return false;
@@ -174,13 +175,13 @@ class Horde_Cache_Storage_Mongo extends Horde_Cache_Storage_Base
         $key = $this->_getCid($key);
 
         /* Build SQL query. */
-        $query = array(
-            self::CID => $key
-        );
+        $query = [
+            self::CID => $key,
+        ];
 
         // 0 lifetime checks for objects which have no expiration
         if ($lifetime != 0) {
-            $query[self::TIMESTAMP] = array('$gte' => time() - $lifetime);
+            $query[self::TIMESTAMP] = ['$gte' => time() - $lifetime];
         }
 
         try {
@@ -212,9 +213,9 @@ class Horde_Cache_Storage_Mongo extends Horde_Cache_Storage_Base
         $key = $this->_getCid($key);
 
         try {
-            $this->_db->remove(array(
-                self::CID => $key
-            ));
+            $this->_db->remove([
+                self::CID => $key,
+            ]);
             if ($this->_logger) {
                 $this->_logger->log(sprintf('Cache expire: %s (cache ID %s)', $okey, $key), 'DEBUG');
             }

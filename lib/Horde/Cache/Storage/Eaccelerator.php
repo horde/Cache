@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright 2006-2017 Horde LLC (http://www.horde.org/)
+ * Copyright 2006-2026 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information (LGPL). If you
  * did not receive this file, see http://www.horde.org/licenses/lgpl21.
@@ -33,15 +34,15 @@ class Horde_Cache_Storage_Eaccelerator extends Horde_Cache_Storage_Base
      *
      * @throws Horde_Cache_Exception
      */
-    public function __construct(array $params = array())
+    public function __construct(array $params = [])
     {
         if (!function_exists('eaccelerator_gc')) {
             throw new Horde_Cache_Exception('eAccelerator must be compiled with support for shared memory to use as caching backend.');
         }
 
-        parent::__construct(array_merge(array(
+        parent::__construct(array_merge([
             'prefix' => '',
-        ), $params));
+        ], $params));
     }
 
     /**

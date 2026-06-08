@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright 2006-2017 Horde LLC (http://www.horde.org/)
+ * Copyright 2006-2026 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information (LGPL). If you
  * did not receive this file, see http://www.horde.org/licenses/lgpl21.
@@ -31,7 +32,7 @@ class Horde_Cache_Storage_Memcache extends Horde_Cache_Storage_Base
      *
      * @var array
      */
-    protected $_objectcache = array();
+    protected $_objectcache = [];
 
     /**
      * Memcache object.
@@ -50,7 +51,7 @@ class Horde_Cache_Storage_Memcache extends Horde_Cache_Storage_Base
      *             DEFAULT: ''
      * </pre>
      */
-    public function __construct(array $params = array())
+    public function __construct(array $params = [])
     {
         if (!isset($params['memcache'])) {
             if (isset($params['hashtable'])) {
@@ -60,9 +61,9 @@ class Horde_Cache_Storage_Memcache extends Horde_Cache_Storage_Base
             }
         }
 
-        parent::__construct(array_merge(array(
+        parent::__construct(array_merge([
             'prefix' => '',
-        ), $params));
+        ], $params));
     }
 
     /**
@@ -82,7 +83,7 @@ class Horde_Cache_Storage_Memcache extends Horde_Cache_Storage_Base
             return $this->_objectcache[$key];
         }
 
-        $key_list = array($key);
+        $key_list = [$key];
         if (!empty($lifetime)) {
             $key_list[] = $key . '_e';
         }
@@ -94,9 +95,9 @@ class Horde_Cache_Storage_Memcache extends Horde_Cache_Storage_Base
         }
 
         // If we can't find the expire time, assume we have exceeded it.
-        if (empty($lifetime) ||
-            (($res[$key . '_e'] !== false) &&
-             ($res[$key . '_e'] + $lifetime > time()))) {
+        if (empty($lifetime)
+            || (($res[$key . '_e'] !== false)
+             && ($res[$key . '_e'] + $lifetime > time()))) {
             $this->_objectcache[$key] = $res[$key];
         } else {
             $this->expire($original_key);
@@ -141,7 +142,7 @@ class Horde_Cache_Storage_Memcache extends Horde_Cache_Storage_Base
     public function clear()
     {
         $this->_memcache->flush();
-        $this->_objectcache = array();
+        $this->_objectcache = [];
     }
 
 }

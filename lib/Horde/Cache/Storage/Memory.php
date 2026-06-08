@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright 2010-2017 Horde LLC (http://www.horde.org/)
+ * Copyright 2010-2026 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information (LGPL). If you
  * did not receive this file, see http://www.horde.org/licenses/lgpl21.
@@ -33,15 +34,14 @@ class Horde_Cache_Storage_Memory extends Horde_Cache_Storage_Base
      *
      * @var array
      */
-    private $_cache = array();
+    private $_cache = [];
 
     /**
      */
     public function get($key, $lifetime = 0)
     {
-        return isset($this->_cache[$key])
-            ? $this->_cache[$key]
-            : false;
+        return $this->_cache[$key]
+            ?? false;
     }
 
     /**
@@ -69,7 +69,7 @@ class Horde_Cache_Storage_Memory extends Horde_Cache_Storage_Base
      */
     public function clear()
     {
-        $this->_cache = array();
+        $this->_cache = [];
     }
 
 }
