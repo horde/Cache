@@ -12,12 +12,23 @@
  * @package  Cache
  */
 
+use Horde\Cache\HashtableStorage;
+use Horde\HashTable\HashTable;
+
 /**
- * Cache storage using the Horde_HashTable interface.
+ * Cache storage using a HashTable transport.
+ *
+ * Accepts either:
+ *   - A modern Horde\HashTable\HashTable (preferred). The class delegates to
+ *     {@see HashtableStorage} for the actual storage operations and supports
+ *     phpredis as well as Predis.
+ *   - A legacy Horde_HashTable_Base instance (deprecated path). Operates on
+ *     the legacy interface for backward compatibility while consumers
+ *     migrate.
  *
  * @author    Michael Slusarz <slusarz@horde.org>
  * @category  Horde
- * @copyright 2013-2017 Horde LLC
+ * @copyright 2013-2026 Horde LLC
  * @license   http://www.horde.org/licenses/lgpl21 LGPL 2.1
  * @package   Cache
  * @since     2.2.0
@@ -25,16 +36,25 @@
 class Horde_Cache_Storage_Hashtable extends Horde_Cache_Storage_Base
 {
     /**
-     * HashTable object.
+     * HashTable object (legacy path).
      *
-     * @var Horde_HashTable
+     * @var Horde_HashTable|null
      */
     protected $_hash;
 
     /**
+     * Modern PSR-4 storage delegate, set when a modern HashTable is provided.
+     *
+     * @var HashtableStorage|null
+     */
+    protected ?HashtableStorage $_modern = null;
+
+    /**
      * @param array $params  Additional parameters:
      * <pre>
-     *   - hashtable: (Horde_HashTable) [REQUIRED] A Horde_HashTable object.
+     *   - hashtable: (Horde_HashTable|HashTable) [REQUIRED] HashTable instance.
+     *                Modern Horde\HashTable\HashTable is preferred; legacy
+     *                Horde_HashTable_Base is accepted for BC.
      *   - prefix: (string) The prefix to use for the cache keys.
      *             DEFAULT: ''
      * </pre>
@@ -54,13 +74,27 @@ class Horde_Cache_Storage_Hashtable extends Horde_Cache_Storage_Base
      */
     protected function _initOb()
     {
-        $this->_hash = $this->_params['hashtable'];
+        $ht = $this->_params['hashtable'];
+
+        if ($ht instanceof HashTable) {
+            $this->_modern = new HashtableStorage(
+                hashtable: $ht,
+                prefix: (string) $this->_params['prefix'],
+            );
+            return;
+        }
+
+        $this->_hash = $ht;
     }
 
     /**
      */
     public function get($key, $lifetime = 0)
     {
+        if ($this->_modern !== null) {
+            return $this->_modern->getWithLifetime((string) $key, (int) $lifetime);
+        }
+
         $dkey = $this->_getKey($key);
         $query = [$dkey];
         if ($lifetime) {
@@ -81,6 +115,11 @@ class Horde_Cache_Storage_Hashtable extends Horde_Cache_Storage_Base
      */
     public function set($key, $data, $lifetime = 0)
     {
+        if ($this->_modern !== null) {
+            $this->_modern->set((string) $key, $data, (int) $lifetime);
+            return;
+        }
+
         $opts = array_filter([
             'expire' => $lifetime,
         ]);
@@ -93,6 +132,10 @@ class Horde_Cache_Storage_Hashtable extends Horde_Cache_Storage_Base
      */
     public function exists($key, $lifetime = 0)
     {
+        if ($this->_modern !== null) {
+            return $this->_modern->hasWithLifetime((string) $key, (int) $lifetime);
+        }
+
         return ($this->get($key, $lifetime) !== false);
     }
 
@@ -100,6 +143,11 @@ class Horde_Cache_Storage_Hashtable extends Horde_Cache_Storage_Base
      */
     public function expire($key)
     {
+        if ($this->_modern !== null) {
+            $this->_modern->delete((string) $key);
+            return;
+        }
+
         $this->_hash->delete([
             $this->_getKey($key),
             $this->_getKey($key, true),
@@ -110,6 +158,11 @@ class Horde_Cache_Storage_Hashtable extends Horde_Cache_Storage_Base
      */
     public function clear()
     {
+        if ($this->_modern !== null) {
+            $this->_modern->clear();
+            return;
+        }
+
         $this->_hash->clear();
     }
 
@@ -125,5 +178,4 @@ class Horde_Cache_Storage_Hashtable extends Horde_Cache_Storage_Base
     {
         return $this->_params['prefix'] . $key . ($ts ? '_t' : '');
     }
-
 }
