@@ -26,9 +26,16 @@ class Horde_Cache_Storage_Hashtable extends Horde_Cache_Storage_Base
     /**
      * HashTable object.
      *
-     * @var Horde_HashTable
+     * @var Horde_HashTable|\Horde\HashTable\HashTable
      */
     protected $_hash;
+
+    /**
+     * Modern storage adapter for Horde\HashTable\HashTable backends.
+     *
+     * @var \Horde\Cache\HashtableStorage|null
+     */
+    protected ?\Horde\Cache\HashtableStorage $_modern = null;
 
     /**
      * @param array $params  Additional parameters:
@@ -54,12 +61,23 @@ class Horde_Cache_Storage_Hashtable extends Horde_Cache_Storage_Base
     protected function _initOb()
     {
         $this->_hash = $this->_params['hashtable'];
+
+        if ($this->_hash instanceof \Horde\HashTable\HashTable) {
+            $this->_modern = new \Horde\Cache\HashtableStorage(
+                hashtable: $this->_hash,
+                prefix: $this->_params['prefix']
+            );
+        }
     }
 
     /**
      */
     public function get($key, $lifetime = 0)
     {
+        if ($this->_modern) {
+            return $this->_modern->getWithLifetime($key, $lifetime);
+        }
+
         $dkey = $this->_getKey($key);
         $query = array($dkey);
         if ($lifetime) {
@@ -80,6 +98,12 @@ class Horde_Cache_Storage_Hashtable extends Horde_Cache_Storage_Base
      */
     public function set($key, $data, $lifetime = 0)
     {
+        if ($this->_modern) {
+            $this->_modern->set($key, $data, $lifetime);
+
+            return;
+        }
+
         $opts = array_filter(array(
             'expire' => $lifetime
         ));
@@ -99,6 +123,12 @@ class Horde_Cache_Storage_Hashtable extends Horde_Cache_Storage_Base
      */
     public function expire($key)
     {
+        if ($this->_modern) {
+            $this->_modern->delete($key);
+
+            return;
+        }
+
         $this->_hash->delete(array(
             $this->_getKey($key),
             $this->_getKey($key, true)
