@@ -1,81 +1,14 @@
 ---
-3.0.0alpha5:
-  api: 3.0.0alpha1
-  state:
-    release: alpha
-    api: alpha
-  date: 2021-11-19
-  license:
-    identifier: LGPL-2.1
-    uri: http://www.horde.org/licenses/lgpl21
-  notes: |+
-3.0.0alpha4:
-  api: 3.0.0alpha1
-  state:
-    release: alpha
-    api: alpha
-  date: 2021-11-19
-  license:
-    identifier: LGPL-2.1
-    uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [rla] Upgraded to namespaced code complying with PSR-12 and PHPStan level 1.
-    |+
-3.0.0alpha3:
-  api: 3.0.0alpha1
-  state:
-    release: alpha
-    api: alpha
-  date: 2021-03-13
-  license:
-    identifier: LGPL-2.1
-    uri: http://www.horde.org/licenses/lgpl21
-  notes: |+
-3.0.0alpha2:
-  api: 3.0.0alpha1
-  state:
-    release: alpha
-    api: alpha
-  date: 2021-02-24
-  license:
-    identifier: LGPL-2.1
-    uri: http://www.horde.org/licenses/lgpl21
-  notes: |+
-3.0.0alpha1:
-  api: 3.0.0alpha1
+3.0.0:
+  api: 3.0.0
   state:
     release: stable
     api: stable
-  date: 2021-02-23
-  license:
-    identifier: LGPL-2.1
-    uri: http://www.horde.org/licenses/lgpl21
-  notes: ~
-3.0.0-beta2:
-  api: 3.0.0-beta2
-  state:
-    release: beta
-    api: beta
-  date: 2026-04-29
+  date: 2026-06-26
   license:
     identifier: LGPL-2.1-only
     uri: https://spdx.org/licenses/LGPL-2.1-only.html
-  notes: |-
-    refactor: Depend on new-style hashtable driver
-3.0.0-beta1:
-  api: 3.0.0-beta1
-  state:
-    release: beta
-    api: beta
-  date: 2026-04-01
-  license:
-    identifier: LGPL-2.1-only
-    uri: https://spdx.org/licenses/LGPL-2.1-only.html
-  notes: |-
-    docs: Add UPGRADING guide for migration to PSR-16
-    chore(metadata): Expose we now provide a PSR-16 implementation and require a PSR-3 logger
-    test: Cover PSR-16 implementation with unit tests
-    feat: PSR-16 Cache interface
+  notes: "refactor(Cache): Storage_Hashtable accepts modern Horde\\HashTable, delegates to HashtableStorage\nstyle: php-cs-fixer\nchore: Update workflow dependency"
 3.0.0-RC2:
   api: 3.0.0-RC2
   state:
@@ -85,8 +18,7 @@
   license:
     identifier: LGPL-2.1-only
     uri: https://spdx.org/licenses/LGPL-2.1-only.html
-  notes: |-
-    chore(hordeyml): Fix wrong .horde.yml provide: key to provides: for re-release
+  notes: 'chore(hordeyml): Fix wrong .horde.yml provide: key to provides: for re-release'
 3.0.0-RC1:
   api: 3.0.0-RC1
   state:
@@ -96,8 +28,77 @@
   license:
     identifier: LGPL-2.1-only
     uri: https://spdx.org/licenses/LGPL-2.1-only.html
-  notes: |-
-    test: Refactor Hashtable tests to use the modern hashtable drivers
+  notes: 'test: Refactor Hashtable tests to use the modern hashtable drivers'
+3.0.0-beta2:
+  api: 3.0.0-beta2
+  state:
+    release: beta
+    api: beta
+  date: 2026-04-29
+  license:
+    identifier: LGPL-2.1-only
+    uri: https://spdx.org/licenses/LGPL-2.1-only.html
+  notes: 'refactor: Depend on new-style hashtable driver'
+3.0.0-beta1:
+  api: 3.0.0-beta1
+  state:
+    release: beta
+    api: beta
+  date: 2026-04-01
+  license:
+    identifier: LGPL-2.1-only
+    uri: https://spdx.org/licenses/LGPL-2.1-only.html
+  notes: "docs: Add UPGRADING guide for migration to PSR-16\nchore(metadata): Expose we now provide a PSR-16 implementation and require a PSR-3 logger\ntest: Cover PSR-16 implementation with unit tests\nfeat: PSR-16 Cache interface"
+3.0.0alpha5:
+  api: 3.0.0alpha1
+  state:
+    release: alpha
+    api: alpha
+  date: 2021-11-19
+  license:
+    identifier: LGPL-2.1
+    uri: http://www.horde.org/licenses/lgpl21
+  notes: ''
+3.0.0alpha4:
+  api: 3.0.0alpha1
+  state:
+    release: alpha
+    api: alpha
+  date: 2021-11-19
+  license:
+    identifier: LGPL-2.1
+    uri: http://www.horde.org/licenses/lgpl21
+  notes: "[rla] Upgraded to namespaced code complying with PSR-12 and PHPStan level 1.\n|+\n"
+3.0.0alpha3:
+  api: 3.0.0alpha1
+  state:
+    release: alpha
+    api: alpha
+  date: 2021-03-13
+  license:
+    identifier: LGPL-2.1
+    uri: http://www.horde.org/licenses/lgpl21
+  notes: ''
+3.0.0alpha2:
+  api: 3.0.0alpha1
+  state:
+    release: alpha
+    api: alpha
+  date: 2021-02-24
+  license:
+    identifier: LGPL-2.1
+    uri: http://www.horde.org/licenses/lgpl21
+  notes: ''
+3.0.0alpha1:
+  api: 3.0.0alpha1
+  state:
+    release: stable
+    api: stable
+  date: 2021-02-23
+  license:
+    identifier: LGPL-2.1
+    uri: http://www.horde.org/licenses/lgpl21
+  notes: null
 2.5.5:
   api: 2.5.0
   state:
@@ -107,8 +108,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [jan] Fix MongoDB backend with mongodb extension.
+  notes: "[jan] Fix MongoDB backend with mongodb extension.\n"
 2.5.4:
   api: 2.5.0
   state:
@@ -118,8 +118,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [jan] Run Memcache and Mongo tests on PHP 7 too.
+  notes: "[jan] Run Memcache and Mongo tests on PHP 7 too.\n"
 2.5.3:
   api: 2.5.0
   state:
@@ -129,9 +128,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [jan] Fix incomplete migration from old to new garbage collection in file backend (Bug #14258).
-    [jan] Mark PHP 7 as supported.
+  notes: "[jan] Fix incomplete migration from old to new garbage collection in file backend (Bug #14258).\n[jan] Mark PHP 7 as supported.\n"
 2.5.2:
   api: 2.5.0
   state:
@@ -141,12 +138,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [jan] Improve performance and memory consumption of garbage collection in File driver.
-    [jan] Fix garbage collection in File driver.
-    [jan] Fix caching issues within the same request in the Memcache driver.
-    [jan] Fix the Mongo driver's expire() if not using a logger.
-    [jan] Add unit tests.
+  notes: "[jan] Improve performance and memory consumption of garbage collection in File driver.\n[jan] Fix garbage collection in File driver.\n[jan] Fix caching issues within the same request in the Memcache driver.\n[jan] Fix the Mongo driver's expire() if not using a logger.\n[jan] Add unit tests.\n"
 2.5.1:
   api: 2.5.0
   state:
@@ -156,8 +148,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [jan] Improve Oracle compatibility.
+  notes: "[jan] Improve Oracle compatibility.\n"
 2.5.0:
   api: 2.5.0
   state:
@@ -167,9 +158,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [mms] Add Memory driver.
-    [mms] Deprecate Memoryoverlay and Mock drivers.
+  notes: "[mms] Add Memory driver.\n[mms] Deprecate Memoryoverlay and Mock drivers.\n"
 2.4.2:
   api: 2.4.0
   state:
@@ -179,8 +168,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [mms] Hashtable driver now respects lifetime parameter in the get() and exists() methods (Bug #13085).
+  notes: "[mms] Hashtable driver now respects lifetime parameter in the get() and exists() methods (Bug #13085).\n"
 2.4.1:
   api: 2.4.0
   state:
@@ -190,8 +178,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [mms] Cache prefix should be handled by Hashtable driver, not underlying backend object.
+  notes: "[mms] Cache prefix should be handled by Hashtable driver, not underlying backend object.\n"
 2.4.0:
   api: 2.4.0
   state:
@@ -201,9 +188,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [mms] Fix lifetime usage in the file driver.
-    [mms] Add 'no_gc' parameter to the Horde_Cache_Storage_File driver.
+  notes: "[mms] Fix lifetime usage in the file driver.\n[mms] Add 'no_gc' parameter to the Horde_Cache_Storage_File driver.\n"
 2.3.0:
   api: 2.3.0
   state:
@@ -213,9 +198,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [mms] Fix key expiration for APC, Eaccelerator, and Xcache (Bug #12735).
-    [mms] Add Horde_Cache_Storage_Memoryoverlay driver.
+  notes: "[mms] Fix key expiration for APC, Eaccelerator, and Xcache (Bug #12735).\n[mms] Add Horde_Cache_Storage_Memoryoverlay driver.\n"
 2.2.1:
   api: 2.2.0
   state:
@@ -225,8 +208,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [mms] Fix explicit key expiration (João Machado <geral@jpaulo.eu>).
+  notes: "[mms] Fix explicit key expiration (João Machado <geral@jpaulo.eu>).\n"
 2.2.0:
   api: 2.2.0
   state:
@@ -236,11 +218,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [mms] Fix return from get() when using the Hashtable driver.
-    [mms] Fix hashtable driver name.
-    [mms] Horde_Memcache cache driver is now deprecated in favor of the Horde_HashTable driver.
-    [mms] Add Horde_HashTable cache driver.
+  notes: "[mms] Fix return from get() when using the Hashtable driver.\n[mms] Fix hashtable driver name.\n[mms] Horde_Memcache cache driver is now deprecated in favor of the Horde_HashTable driver.\n[mms] Add Horde_HashTable cache driver.\n"
 2.1.0:
   api: 1.1.0
   state:
@@ -250,8 +228,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [mms] Add MongoDB cache driver.
+  notes: "[mms] Add MongoDB cache driver.\n"
 2.0.4:
   api: 1.0.0
   state:
@@ -261,9 +238,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [mms] Make Horde_Compress_Fast a required package (Bug #12166).
-    [mms] Fix serialization of all storage drivers.
+  notes: "[mms] Make Horde_Compress_Fast a required package (Bug #12166).\n[mms] Fix serialization of all storage drivers.\n"
 2.0.3:
   api: 1.0.0
   state:
@@ -273,8 +248,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [mms] Fix regression preventing compression of Horde_Cache data (Bug #12088).
+  notes: "[mms] Fix regression preventing compression of Horde_Cache data (Bug #12088).\n"
 2.0.2:
   api: 1.0.0
   state:
@@ -284,8 +258,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [mms] Abstract data compression out into Horde_Compress_Fast package.
+  notes: "[mms] Abstract data compression out into Horde_Compress_Fast package.\n"
 2.0.1:
   api: 1.0.0
   state:
@@ -295,42 +268,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [jan] Re-packaged 2.0.0 release.
-2.0.0beta1:
-  api: 1.0.0
-  state:
-    release: beta
-    api: stable
-  date: 2012-07-19
-  license:
-    identifier: LGPL-2.1
-    uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    First beta release for Horde 5.
-    [mms] Add Horde_Cache#testReadWrite().
-2.0.0alpha1:
-  api: 1.0.0
-  state:
-    release: alpha
-    api: stable
-  date: 2012-07-05
-  license:
-    identifier: LGPL-2.1
-    uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    First alpha release for Horde 5.
-2.0.0RC1:
-  api: 1.0.0
-  state:
-    release: beta
-    api: stable
-  date: 2012-10-26
-  license:
-    identifier: LGPL-2.1
-    uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [mms] Correctly invalidate cache when write error occurs while using the stack driver.
+  notes: "[jan] Re-packaged 2.0.0 release.\n"
 2.0.0:
   api: 1.0.0
   state:
@@ -340,8 +278,37 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    First stable release for Horde 5.
+  notes: "First stable release for Horde 5.\n"
+2.0.0RC1:
+  api: 1.0.0
+  state:
+    release: beta
+    api: stable
+  date: 2012-10-26
+  license:
+    identifier: LGPL-2.1
+    uri: http://www.horde.org/licenses/lgpl21
+  notes: "[mms] Correctly invalidate cache when write error occurs while using the stack driver.\n"
+2.0.0beta1:
+  api: 1.0.0
+  state:
+    release: beta
+    api: stable
+  date: 2012-07-19
+  license:
+    identifier: LGPL-2.1
+    uri: http://www.horde.org/licenses/lgpl21
+  notes: "First beta release for Horde 5.\n[mms] Add Horde_Cache#testReadWrite().\n"
+2.0.0alpha1:
+  api: 1.0.0
+  state:
+    release: alpha
+    api: stable
+  date: 2012-07-05
+  license:
+    identifier: LGPL-2.1
+    uri: http://www.horde.org/licenses/lgpl21
+  notes: "First alpha release for Horde 5.\n"
 1.0.6:
   api: 1.0.0
   state:
@@ -351,8 +318,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [mms] Correctly invalidate cache when write error occurs while using the stack driver.
+  notes: "[mms] Correctly invalidate cache when write error occurs while using the stack driver.\n"
 1.0.5:
   api: 1.0.0
   state:
@@ -362,8 +328,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [rla] Add license file.
+  notes: "[rla] Add license file.\n"
 1.0.4:
   api: 1.0.0
   state:
@@ -373,8 +338,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [mms] Fix memcache duplicate keys (Bug #10072; goncalo.queiros@portugalmail.net).
+  notes: "[mms] Fix memcache duplicate keys (Bug #10072; goncalo.queiros@portugalmail.net).\n"
 1.0.3:
   api: 1.0.0
   state:
@@ -384,8 +348,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [jan] Fix dependency.
+  notes: "[jan] Fix dependency.\n"
 1.0.2:
   api: 1.0.0
   state:
@@ -395,8 +358,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [jan] Fix expiring entries in sub-storages of Stack driver (Bug #9949).
+  notes: "[jan] Fix expiring entries in sub-storages of Stack driver (Bug #9949).\n"
 1.0.1:
   api: 1.0.0
   state:
@@ -406,62 +368,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [jan] Relax required lzf extension version.
-1.0.0beta1:
-  api: 1.0.0
-  state:
-    release: beta
-    api: beta
-  date: 2011-03-16
-  license:
-    identifier: LGPL-2.1
-    uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    First beta release for Horde 4.
-1.0.0alpha1:
-  api: 1.0.0
-  state:
-    release: alpha
-    api: alpha
-  date: 2011-03-08
-  license:
-    identifier: LGPL-2.1
-    uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    First alpha release for Horde 4.
-    Add SQL backend.
-    Converted to package.xml 2.0 for pear.horde.org.
-    Add APC, eAccelerator, and XCache backends (duck@obala.net).
-    Abstracted storage-specific code into 'Storage' drivers.
-    Add option to transparently compress cache data using lzf.
-    Added Horde_Cache_Session::.
-    Horde_Cache::set() no longer returns a boolean result.
-    Added Horde_Cache_Exception::.
-    Removed dependency on Horde Core.
-    Added Horde_Cache#clear()
-1.0.0RC2:
-  api: 1.0.0
-  state:
-    release: beta
-    api: beta
-  date: 2011-03-29
-  license:
-    identifier: LGPL-2.1
-    uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    Second release candidate for Horde 4.
-1.0.0RC1:
-  api: 1.0.0
-  state:
-    release: beta
-    api: beta
-  date: 2011-03-22
-  license:
-    identifier: LGPL-2.1
-    uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    First release candidate for Horde 4.
+  notes: "[jan] Relax required lzf extension version.\n"
 1.0.0:
   api: 1.0.0
   state:
@@ -471,8 +378,47 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    First stable release for Horde 4.
+  notes: "First stable release for Horde 4.\n"
+1.0.0RC2:
+  api: 1.0.0
+  state:
+    release: beta
+    api: beta
+  date: 2011-03-29
+  license:
+    identifier: LGPL-2.1
+    uri: http://www.horde.org/licenses/lgpl21
+  notes: "Second release candidate for Horde 4.\n"
+1.0.0RC1:
+  api: 1.0.0
+  state:
+    release: beta
+    api: beta
+  date: 2011-03-22
+  license:
+    identifier: LGPL-2.1
+    uri: http://www.horde.org/licenses/lgpl21
+  notes: "First release candidate for Horde 4.\n"
+1.0.0beta1:
+  api: 1.0.0
+  state:
+    release: beta
+    api: beta
+  date: 2011-03-16
+  license:
+    identifier: LGPL-2.1
+    uri: http://www.horde.org/licenses/lgpl21
+  notes: "First beta release for Horde 4.\n"
+1.0.0alpha1:
+  api: 1.0.0
+  state:
+    release: alpha
+    api: alpha
+  date: 2011-03-08
+  license:
+    identifier: LGPL-2.1
+    uri: http://www.horde.org/licenses/lgpl21
+  notes: "First alpha release for Horde 4.\nAdd SQL backend.\nConverted to package.xml 2.0 for pear.horde.org.\nAdd APC, eAccelerator, and XCache backends (duck@obala.net).\nAbstracted storage-specific code into 'Storage' drivers.\nAdd option to transparently compress cache data using lzf.\nAdded Horde_Cache_Session::.\nHorde_Cache::set() no longer returns a boolean result.\nAdded Horde_Cache_Exception::.\nRemoved dependency on Horde Core.\nAdded Horde_Cache#clear()\n"
 0.0.1:
   api: 0.0.1
   state:
@@ -482,5 +428,4 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    Initial packaging.
+  notes: "Initial packaging.\n"
